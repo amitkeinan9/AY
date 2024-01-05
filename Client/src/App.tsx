@@ -1,12 +1,33 @@
-import { Typography } from '@mui/material'
-import './App.css'
-import {Sidebar} from './Sidebar/Sidebar'
+import "./App.css";
+import { Outlet, RouterProvider, createBrowserRouter } from "react-router-dom";
+import LoginPage from "./pages/login/LoginPage";
+import { ThemeProvider } from "@emotion/react";
+import { theme } from "./theme/theme";
+import { HomePage } from "./pages/home/HomePage";
+
+const router = createBrowserRouter([
+  {
+    path: "/login",
+    element: <LoginPage />,
+  },
+  {
+    path: "/",
+    element: <Outlet />,
+    children: [
+      {
+        path: "home",
+        element: <HomePage />,
+      },
+    ],
+  },
+]);
 
 function App() {
   return (
-    <Sidebar/>
-    // <Typography>Hello</Typography>
-  )
+    <ThemeProvider theme={theme}>
+      <RouterProvider router={router} />
+    </ThemeProvider>
+  );
 }
 
-export default App
+export default App;
