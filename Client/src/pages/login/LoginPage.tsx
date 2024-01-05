@@ -1,4 +1,4 @@
-import { Alert, AlertTitle, styled } from "@mui/material";
+import { Alert, AlertTitle, Button, styled } from "@mui/material";
 import TextField from "@mui/material/TextField/TextField";
 import React from "react";
 import {
@@ -9,9 +9,8 @@ import {
   textButtonStyles,
   actionButtonsStyles,
 } from "./styles";
-import { LoginButton } from "../../components/login/LoginButton";
-import { RegisterButton } from "../../components/login/RegisterButton";
 import { useLoginForm } from "./useLoginForm";
+import { useLoginFormActions } from "./useLoginFormActions";
 
 const PageWrapper = styled("div")(pageWrapperStyles);
 const Logo = styled("img")(logoStyles);
@@ -33,6 +32,12 @@ const LoginPage: React.FC = () => {
     password,
     setError,
   } = useLoginForm();
+
+  const { handleLogin, handleRegister } = useLoginFormActions(
+    email,
+    password,
+    setError
+  );
 
   return (
     <PageWrapper>
@@ -61,17 +66,25 @@ const LoginPage: React.FC = () => {
 
         <ActionButtons>
           {inLoginMode ? (
-            <LoginButton
+            <Button
+              fullWidth
+              variant="outlined"
+              color="primary"
+              onClick={handleLogin}
               disabled={!isFormValid}
-              setError={setError}
-              userData={{ email, password }}
-            />
+            >
+              Login
+            </Button>
           ) : (
-            <RegisterButton
+            <Button
+              fullWidth
+              variant="outlined"
+              color="primary"
+              onClick={handleRegister}
               disabled={!isFormValid}
-              setError={setError}
-              userData={{ email, password }}
-            />
+            >
+              Login
+            </Button>
           )}
 
           <TextButton onClick={toggleMode}>
