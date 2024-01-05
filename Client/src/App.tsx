@@ -4,6 +4,9 @@ import LoginPage from "./pages/login/LoginPage";
 import { ThemeProvider } from "@emotion/react";
 import { theme } from "./theme/theme";
 import { HomePage } from "./pages/home/HomePage";
+import { Sidebar } from "./Sidebar/Sidebar";
+import { Layout } from "./Layout/Layout";
+import { ProfilePage } from "./pages/profile/ProfilePage";
 
 const router = createBrowserRouter([
   {
@@ -12,11 +15,15 @@ const router = createBrowserRouter([
   },
   {
     path: "/",
-    element: <Outlet />,
+    element: <Layout/>,
     children: [
       {
         path: "home",
         element: <HomePage />,
+      },
+      {
+        path: "profile",
+        element: <ProfilePage />,
       },
     ],
   },
