@@ -27,6 +27,7 @@ export const inputFieldsStyles = css({
   display: "flex",
   flexDirection: "column",
   gap: 10,
+  paddingBottom: 10,
 });
 
 export const actionButtonsStyles = css({
