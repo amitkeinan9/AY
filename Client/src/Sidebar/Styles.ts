@@ -17,11 +17,12 @@ export const titleStyles = css({
     marginBottom: 10
 });
 
-export const navigationButtonStyles = css({
+export const navigationButtonStyles  = (isClicked: boolean) => css({
     height: '8vh',
     width: '10vw',
     fontSize: "1.2rem",
     border: 0,
+    color: isClicked? 'none': '#D9D9D9',
 });
 
 export const buttonsContainerStyles = css({
