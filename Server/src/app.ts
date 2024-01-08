@@ -2,10 +2,8 @@ import env from "dotenv";
 import express, { Express, Request, Response } from "express";
 import mongoose from "mongoose";
 import bodyParser from "body-parser";
-import authRouter from "./routers/authRouter";
-import postsRouter from "./routers/postsRouter";
+import authRoute from "./routes/auth_route";
 import authMiddleware from "./common/auth_middleware";
-import morgan from "morgan";
 
 env.config();
 
@@ -27,13 +25,7 @@ const initApp = (): Promise<Express> =>
       app.use(bodyParser.json());
       app.use(bodyParser.urlencoded({ extended: true }));
 
-      app.use(morgan("tiny"));
-
-      app.use("/auth", authRouter);
-
-      app.use(authMiddleware);
-
-      app.use("/posts", postsRouter);
+      app.use("/auth", authRoute);
 
       resolve(app);
     });
