@@ -1,5 +1,5 @@
 import { Request, Response } from "express";
-import User, { IUser } from "../models/user_model";
+import User, { IUser } from "../models/userModel";
 import bcrypt from "bcrypt";
 import jwt, { Secret } from "jsonwebtoken";
 
@@ -159,6 +159,7 @@ const refresh = async (req: Request, res: Response) => {
           refreshToken: newRefreshToken,
         });
       } catch (err: any) {
+        console.error(err);
         res.sendStatus(401).send(err.message);
       }
     }
