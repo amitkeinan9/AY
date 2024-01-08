@@ -2,7 +2,8 @@ import mongoose, { Model, Schema, Document } from "mongoose";
 
 export interface IUser extends Document {
   email: string;
-  password: string;
+  password?: string;
+  isGoogleUser?: boolean;
   _id?: string;
   refreshTokens?: string[];
 }
@@ -14,7 +15,11 @@ const userSchema: Schema = new mongoose.Schema<IUser>({
   },
   password: {
     type: String,
-    required: true,
+    required: false,
+  },
+  isGoogleUser: {
+    type: Boolean,
+    required: false,
   },
   refreshTokens: {
     type: [String],

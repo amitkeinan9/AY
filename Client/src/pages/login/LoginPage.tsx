@@ -1,4 +1,10 @@
-import { Alert, AlertTitle, Button, styled } from "@mui/material";
+import {
+  Alert,
+  AlertTitle,
+  CircularProgress,
+  Divider,
+  styled,
+} from "@mui/material";
 import TextField from "@mui/material/TextField/TextField";
 import React from "react";
 import {
@@ -8,9 +14,14 @@ import {
   logoStyles,
   textButtonStyles,
   actionButtonsStyles,
+  dividerStyles,
+  googleButtonStyles,
+  googleLoaderStyles,
 } from "./styles";
 import { useLoginForm } from "./useLoginForm";
 import { useLoginFormActions } from "./useLoginFormActions";
+import GoogleIcon from "@mui/icons-material/Google";
+import { LoadingButton } from "../../components/loadingButton/LoadingButton";
 
 const PageWrapper = styled("div")(pageWrapperStyles);
 const Logo = styled("img")(logoStyles);
@@ -18,6 +29,9 @@ const LoginForm = styled("div")(loginFormStyles);
 const InputFields = styled("div")(inputFieldsStyles);
 const ActionButtons = styled("div")(actionButtonsStyles);
 const TextButton = styled("p")(textButtonStyles);
+const ActionsDivider = styled(Divider)(dividerStyles);
+const GoogleButton = styled(LoadingButton)(googleButtonStyles);
+const GoogleLoader = styled(CircularProgress)(googleLoaderStyles);
 
 const LoginPage: React.FC = () => {
   const {
@@ -33,11 +47,14 @@ const LoginPage: React.FC = () => {
     setError,
   } = useLoginForm();
 
-  const { handleLogin, handleRegister } = useLoginFormActions(
-    email,
-    password,
-    setError
-  );
+  const {
+    handleLogin,
+    isLoginLoading,
+    handleRegister,
+    isRegisterLoading,
+    handleGoogleLogin,
+    isGoogleLoading,
+  } = useLoginFormActions(email, password, setError);
 
   return (
     <PageWrapper>
@@ -66,7 +83,8 @@ const LoginPage: React.FC = () => {
 
         <ActionButtons>
           {inLoginMode ? (
-            <Button
+            <LoadingButton
+              isLoading={isLoginLoading}
               fullWidth
               variant="outlined"
               color="primary"
@@ -74,17 +92,18 @@ const LoginPage: React.FC = () => {
               disabled={!isFormValid}
             >
               Login
-            </Button>
+            </LoadingButton>
           ) : (
-            <Button
+            <LoadingButton
+              isLoading={isRegisterLoading}
               fullWidth
               variant="outlined"
               color="primary"
               onClick={handleRegister}
               disabled={!isFormValid}
             >
-              Login
-            </Button>
+              Register
+            </LoadingButton>
           )}
 
           <TextButton onClick={toggleMode}>
@@ -92,6 +111,19 @@ const LoginPage: React.FC = () => {
               ? "Or create an account"
               : "Already have an account? Login instead"}
           </TextButton>
+
+          <ActionsDivider />
+
+          <GoogleButton
+            isLoading={isGoogleLoading}
+            loader={<GoogleLoader size={20} />}
+            onClick={handleGoogleLogin}
+            fullWidth
+            variant="outlined"
+            startIcon={<GoogleIcon />}
+          >
+            Continue with Google
+          </GoogleButton>
         </ActionButtons>
       </LoginForm>
     </PageWrapper>
