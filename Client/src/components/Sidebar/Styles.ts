@@ -22,7 +22,7 @@ export const navigationButtonStyles  = (isClicked: boolean) => css({
     width: '10vw',
     fontSize: "1.2rem",
     border: 0,
-    color: isClicked? 'none': '#D9D9D9',
+    // color: isClicked? 'none': '#D9D9D9',
 });
 
 export const buttonsContainerStyles = css({

@@ -5,9 +5,10 @@ import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import styled from '@emotion/styled';
 import { useLogout } from './useLogout';
+import { NavLink } from "react-router-dom";
 
 const Title = styled(Typography)(titleStyles);
-const NavigationButton = styled(Button)<{ isClicked: boolean }>((props) => navigationButtonStyles(props.isClicked));
+const NavigationButton = styled(NavLink)<{ isClicked: boolean }>((props) => navigationButtonStyles(props.isClicked));
 const ButtonsContainer = styled(Box)(buttonsContainerStyles);
 const ActiveButton = styled(Button)(activeButtonStyles);
 const SidebarContainer = styled(Box)(sidebarContainerStyles)
@@ -27,17 +28,30 @@ export const Sidebar = () => {
             <SidebarContainer>
                 <ButtonsContainer>
                     <Title>AY</Title>
-                    <NavigationButton
-                        isClicked={isHomePage}
-                        onClick={() => handleChangePage('/home', true)}
-                        startIcon={< HomeIcon style={{ fontSize: "2rem" }} />}
+                    <NavLink
+                        // isClicked={isHomePage}
+                        to='/home'
+                        style={( {isActive }) => {                            
+                            return {
+                                color: isActive ? '#D9D9D9': '#D9D9D9'
+                            };
+                        }}
                     >
+                        < HomeIcon style={{ fontSize: "2rem" }} />
                         Home
-                    </NavigationButton>
+                    </NavLink>
                     <NavigationButton
                         isClicked={!isHomePage}
-                        onClick={() => handleChangePage('/profile', false)}
-                        startIcon={< PersonIcon style={{ fontSize: "2rem" }} />}>
+                        to='/profile'
+                        style={({ isActive }) => {
+                            return {
+                                color: isActive ? '#D9D9D9': 'none'
+                            };
+                        }}
+                    // onClick={() => handleChangePage('/profile', false)}
+                    // startIcon={< PersonIcon style={{ fontSize: "2rem" }} />}>
+                    >
+                        < PersonIcon style={{ fontSize: "2rem" }} />
                         Profile
                     </NavigationButton>
                 </ButtonsContainer>
@@ -45,7 +59,7 @@ export const Sidebar = () => {
                     <ActiveButton>New post</ActiveButton>
                     <ActiveButton onClick={handleLogout}>Log out</ActiveButton>
                     {error && (
-                        <Alert severity="error" sx={{mb:1}}>
+                        <Alert severity="error" sx={{ mb: 1 }}>
                             <AlertTitle>Oof</AlertTitle>
                             {error}
                         </Alert>
