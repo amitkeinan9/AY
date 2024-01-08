@@ -21,7 +21,6 @@ beforeAll(async () => {
   app = await initApp({
     oAuthClientMock: oauthClient2,
   });
-  console.log("beforeAll");
 
   // Reset data
   await User.deleteMany({

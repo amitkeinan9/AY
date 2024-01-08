@@ -1,6 +1,6 @@
 import axios from "axios";
 import { CodeResponse, useGoogleLogin } from "@react-oauth/google";
-import { useCallback, useState } from "react";
+import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 
 export const useLoginFormActions = (
@@ -58,9 +58,8 @@ export const useLoginFormActions = (
 
   const handleRegister = async () => {
     setIsRegisterLoading(true);
-
     handleAction("/api/auth/register");
-    setIsRegisterLoading(true);
+    setIsRegisterLoading(false);
   };
 
   return {
@@ -68,7 +67,7 @@ export const useLoginFormActions = (
     isLoginLoading,
     handleRegister,
     isRegisterLoading,
-    handleGoogleLogin: () => handleGoogleLogin(),
+    handleGoogleLogin,
     isGoogleLoading,
   };
 };

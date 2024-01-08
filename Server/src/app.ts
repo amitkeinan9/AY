@@ -3,7 +3,6 @@ import express, { Express, Request, Response } from "express";
 import mongoose from "mongoose";
 import bodyParser from "body-parser";
 import { getAuthRouter } from "./routes/auth_route";
-import authMiddleware from "./common/auth_middleware";
 import { OAuth2Client } from "google-auth-library";
 
 interface AppConfig {
