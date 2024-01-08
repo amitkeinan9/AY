@@ -2,8 +2,8 @@ import mongoose, { Model, Schema, Document } from "mongoose";
 
 export interface IUser extends Document {
   email: string;
-  password: string;
-  isGoogleUser: boolean;
+  password?: string;
+  isGoogleUser?: boolean;
   _id?: string;
   refreshTokens?: string[];
 }

@@ -71,7 +71,12 @@ const login = async (req: Request, res: Response) => {
       return res.status(401).send("email or password incorrect");
     }
 
+    if (user?.isGoogleUser) {
+      return res.status(400).send("Invalid login method for google user");
+    }
+
     const match = await bcrypt.compare(password, user.password);
+
     if (!match) {
       return res.status(401).send("email or password incorrect");
     }
@@ -85,13 +90,7 @@ const login = async (req: Request, res: Response) => {
   }
 };
 
-const getGoogleLogin = () => {
-  const oauth2Client: OAuth2Client = new OAuth2Client(
-    process.env.GOOGLE_CLIENT_ID,
-    process.env.GOOGLE_CLIENT_SECRET,
-    "postmessage"
-  );
-
+const getGoogleLogin = (oauth2Client: OAuth2Client) => {
   return async (req: Request, res: Response) => {
     try {
       const token = await oauth2Client.getToken(req.body.code);
@@ -100,7 +99,6 @@ const getGoogleLogin = () => {
       });
 
       const email = loginTicket.getPayload()?.email;
-
       let user = await User.findOne({ email: email });
 
       if (user === null) {
@@ -111,7 +109,7 @@ const getGoogleLogin = () => {
         });
         console.log("created user");
       } else if (!user.isGoogleUser) {
-        return res.status(401).send("Email is already used with password");
+        return res.status(400).send("Email is already used with password");
       }
 
       const tokens = await createTokens(user);

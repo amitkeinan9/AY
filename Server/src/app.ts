@@ -2,12 +2,17 @@ import env from "dotenv";
 import express, { Express, Request, Response } from "express";
 import mongoose from "mongoose";
 import bodyParser from "body-parser";
-import authRoute from "./routes/auth_route";
+import { getAuthRouter } from "./routes/auth_route";
 import authMiddleware from "./common/auth_middleware";
+import { OAuth2Client } from "google-auth-library";
+
+interface AppConfig {
+  oAuthClientMock?: Partial<OAuth2Client>;
+}
 
 env.config();
 
-const initApp = (): Promise<Express> =>
+const initApp = (config: AppConfig = {}): Promise<Express> =>
   new Promise<Express>((resolve) => {
     const db = mongoose.connection;
     const url = process.env.DB_URL;
@@ -25,7 +30,7 @@ const initApp = (): Promise<Express> =>
       app.use(bodyParser.json());
       app.use(bodyParser.urlencoded({ extended: true }));
 
-      app.use("/auth", authRoute);
+      app.use("/auth", getAuthRouter(config?.oAuthClientMock));
 
       resolve(app);
     });
