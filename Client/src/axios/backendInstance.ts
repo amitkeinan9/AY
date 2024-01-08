@@ -1,4 +1,5 @@
 import axios from "axios";
+
 export const backendAxiosInstance = axios.create({
   baseURL: "/api",
   headers: {
