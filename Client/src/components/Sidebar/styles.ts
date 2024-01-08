@@ -19,13 +19,18 @@ export const titleStyles = css({
     marginBottom: 10
 });
 
-export const navigationButtonStyles = css({
+export const navigationLinkStyles = css({
     display: 'flex',
     height: '7vh',
     alignItems: 'flex-end',
     justifyContent: 'center',
     textDecorationLine: 'none'
 
+});
+
+export const navigationLinkTextStyles = css({
+    fontSize: "1.2rem",
+    fontWeight: 'bold'
 });
 
 export const buttonsContainerStyles = css({

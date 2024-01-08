@@ -1,13 +1,14 @@
 import { Drawer, Button, Box, Typography, Alert, AlertTitle } from '@mui/material';
 import { Home as HomeIcon, Person as PersonIcon } from '@mui/icons-material';
-import { navigationButtonStyles, titleStyles, activeButtonStyles, sidebarContainerStyles, buttonsContainerStyles } from './styles';
+import { titleStyles, activeButtonStyles, sidebarContainerStyles, buttonsContainerStyles, navigationLinkStyles, navigationLinkTextStyles } from './styles';
 import { useState } from 'react';
 import styled from '@emotion/styled';
 import { useLogout } from './useLogout';
 import { NavLink } from "react-router-dom";
 
 const Title = styled(Typography)(titleStyles);
-const NavigationLink = styled(NavLink)(navigationButtonStyles);
+const NavigationLink = styled(NavLink)(navigationLinkStyles);
+const NavigationLinkText = styled(Typography)(navigationLinkTextStyles);
 const ButtonsContainer = styled(Box)(buttonsContainerStyles);
 const ActiveButton = styled(Button)(activeButtonStyles);
 const SidebarContainer = styled(Box)(sidebarContainerStyles)
@@ -30,7 +31,7 @@ export const Sidebar = () => {
                         }}
                     >
                         < HomeIcon sx={{ fontSize: "2rem", marginRight: 1 }} />
-                        <Typography sx={{ fontSize: "1.2rem", fontWeight: 'bold' }}>Home</Typography>
+                        <NavigationLinkText>Home</NavigationLinkText>
                     </NavigationLink>
                     <NavigationLink
                         to='/profile'
@@ -41,7 +42,7 @@ export const Sidebar = () => {
                         }}
                     >
                         <PersonIcon sx={{ fontSize: "2rem", marginRight: 1 }} />
-                        <Typography sx={{ fontSize: "1.2rem", fontWeight: 'bold' }}>Profile</Typography>
+                        <NavigationLinkText>Profile</NavigationLinkText>
                     </NavigationLink>
                 </ButtonsContainer>
                 <ButtonsContainer>
