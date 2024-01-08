@@ -8,20 +8,16 @@ export const useLogout = (
 
     const handleLogout = async () => {
         try {
-            const res = await axios.create({
+            await axios.create({
                 headers: {
                   Authorization: `Bearer ${localStorage.getItem("refreshToken")}`,
                 },
               }).get("/api/auth/logout");
-
-              console.log(res);
               
             localStorage.setItem("accessToken", "");
             localStorage.setItem("refreshToken", "");
             navigate("/login");
-        } catch (error) {
-            console.log('how');
-            
+        } catch (error) {           
             if (axios.isAxiosError(error)) {
                 if (error.response?.status !== 500) {
                     setError(error.response?.data);
