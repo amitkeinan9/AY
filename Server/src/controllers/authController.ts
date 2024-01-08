@@ -2,6 +2,7 @@ import { Request, Response } from "express";
 import User, { IUser } from "../models/userModel";
 import bcrypt from "bcrypt";
 import jwt, { Secret } from "jsonwebtoken";
+import { OAuth2Client } from "google-auth-library";
 
 const createTokens = async (user: IUser) => {
   const accessToken = jwt.sign(
@@ -66,11 +67,16 @@ const login = async (req: Request, res: Response) => {
 
   try {
     const user = await User.findOne({ email: email });
-    if (user == null) {
+    if (user === null) {
       return res.status(401).send("email or password incorrect");
     }
 
+    if (user?.isGoogleUser) {
+      return res.status(400).send("Invalid login method for google user");
+    }
+
     const match = await bcrypt.compare(password, user.password);
+
     if (!match) {
       return res.status(401).send("email or password incorrect");
     }
@@ -82,6 +88,38 @@ const login = async (req: Request, res: Response) => {
     console.error(err);
     return res.status(500).send(err);
   }
+};
+
+const getGoogleLogin = (oauth2Client: OAuth2Client) => {
+  return async (req: Request, res: Response) => {
+    try {
+      const token = await oauth2Client.getToken(req.body.code);
+      const loginTicket = await oauth2Client.verifyIdToken({
+        idToken: token.tokens.id_token ?? "",
+      });
+
+      const email = loginTicket.getPayload()?.email;
+      let user = await User.findOne({ email: email });
+
+      if (user === null) {
+        // Create new user
+        user = await User.create({
+          email,
+          isGoogleUser: true,
+        });
+        console.log("created user");
+      } else if (!user.isGoogleUser) {
+        return res.status(400).send("Email is already used with password");
+      }
+
+      const tokens = await createTokens(user);
+
+      return res.status(200).json(tokens);
+    } catch (err) {
+      console.error(err);
+      return res.status(500).send(err);
+    }
+  };
 };
 
 const logout = async (req: Request, res: Response) => {
@@ -171,4 +209,5 @@ export default {
   login,
   logout,
   refresh,
+  getGoogleLogin,
 };

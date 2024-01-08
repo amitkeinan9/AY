@@ -43,3 +43,24 @@ export const textButtonStyles = css({
     color: purple[800],
   },
 });
+
+export const dividerStyles = css({
+  margin: "20px 0",
+});
+
+const GOOGLE_COLOR = "#004C97";
+
+export const googleButtonStyles = css({
+  color: GOOGLE_COLOR,
+  "&:hover": {
+    borderColor: GOOGLE_COLOR,
+    borderWidth: "2px",
+    backgroundColor: GOOGLE_COLOR,
+    color: "white",
+  },
+});
+
+export const googleLoaderStyles = css({
+  color: GOOGLE_COLOR,
+  padding: 2,
+});
