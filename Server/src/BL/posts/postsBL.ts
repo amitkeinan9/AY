@@ -4,6 +4,7 @@ import {
   countComments,
   getFilterByAuthor,
   lookupAuthors,
+  unwindAuthor,
 } from "./aggregationStages";
 import Post from "../../models/postModel";
 import { PostDTO } from "./types";
@@ -11,6 +12,7 @@ import { PostDTO } from "./types";
 export const getPosts = async (authorId?: string): Promise<PostDTO[]> => {
   const aggregationStages: PipelineStage[] = [
     lookupAuthors,
+    unwindAuthor,
     countComments,
     cleanResults,
   ];

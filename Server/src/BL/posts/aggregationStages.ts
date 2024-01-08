@@ -15,6 +15,10 @@ export const lookupAuthors: PipelineStage = {
   },
 };
 
+export const unwindAuthor: PipelineStage = {
+  $unwind: "$author",
+};
+
 export const countComments: PipelineStage = {
   $addFields: {
     commentsCount: {

@@ -107,7 +107,6 @@ const getGoogleLogin = (oauth2Client: OAuth2Client) => {
           email,
           isGoogleUser: true,
         });
-        console.log("created user");
       } else if (!user.isGoogleUser) {
         return res.status(400).send("Email is already used with password");
       }
