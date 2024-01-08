@@ -120,7 +120,6 @@ const LoginPage: React.FC = () => {
             onClick={handleGoogleLogin}
             fullWidth
             variant="outlined"
-            color="secondary"
             startIcon={<GoogleIcon />}
           >
             Continue with Google

@@ -48,17 +48,19 @@ export const dividerStyles = css({
   margin: "20px 0",
 });
 
+const GOOGLE_COLOR = "#004C97";
+
 export const googleButtonStyles = css({
-  color: "#004C97",
+  color: GOOGLE_COLOR,
   "&:hover": {
-    borderColor: "#004C97",
+    borderColor: GOOGLE_COLOR,
     borderWidth: "2px",
-    backgroundColor: "#004C97",
+    backgroundColor: GOOGLE_COLOR,
     color: "white",
   },
 });
 
 export const googleLoaderStyles = css({
-  color: "#004C97",
+  color: GOOGLE_COLOR,
   padding: 2,
 });
