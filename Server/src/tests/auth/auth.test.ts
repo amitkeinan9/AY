@@ -13,9 +13,7 @@ const user = {
 
 beforeAll(async () => {
   process.env.DB_URL = "mongodb://localhost:27017/AY_testing";
-  
   app = await initApp();
-  console.log("beforeAll");
 
   // Reset data
   await seedDB();
@@ -43,7 +41,7 @@ describe("Auth tests", () => {
     expect(response.statusCode).toBe(406);
   });
 
-  test("Test register missing password", async () => {
+  test("Test register without password", async () => {
     const response = await request(app)
       .post("/auth/register").send({
         email: "test@test.com",

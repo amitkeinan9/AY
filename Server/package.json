@@ -5,7 +5,6 @@
   "main": "index.js",
   "scripts": {
     "test": "tsc && jest --detectOpenHandles --forceExit",
-    "testAuth": "tsc && jest --detectOpenHandles --runInBand --forceExit ./src/tests/auth/auth.test.ts",
     "start": "tsc && node ./dist/src/server.js",
     "dev": "nodemon src/server.ts",
     "build": "tsc"
