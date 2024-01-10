@@ -4,22 +4,20 @@ import { useNavigate } from "react-router-dom";
 import { useQuery } from "react-query";
 import { backendAxiosInstance } from "../../axios/backendInstance";
 import { PostDTO } from "../../types/posts";
-import { CircularProgress } from "@mui/material";
+import { Alert, CircularProgress } from "@mui/material";
+import { containerStyles, postListStyles } from "./styles";
 
-const PostsList = styled("div")({
-  display: "flex",
-  flexDirection: "column",
-  gap: 0,
-  width: "40vw",
-  borderRight: "1px solid rgba(239,243,244,1.00)",
-  borderLeft: "1px solid rgba(239,243,244,1.00)",
-});
-const Loader = styled(CircularProgress)({ margin: "30px auto" });
+const PostsList = styled("div")(postListStyles);
+const Container = styled("div")(containerStyles);
 
 export const HomePage = () => {
   const navigate = useNavigate();
 
-  const { data: posts, isLoading } = useQuery<PostDTO[]>(
+  const {
+    data: posts,
+    isLoading,
+    isError,
+  } = useQuery<PostDTO[]>(
     "posts",
     async () => (await backendAxiosInstance.get("/posts")).data
   );
@@ -27,7 +25,15 @@ export const HomePage = () => {
   return (
     <PostsList>
       {isLoading ? (
-        <Loader />
+        <Container>
+          <CircularProgress />
+        </Container>
+      ) : isError ? (
+        <Container>
+          <Alert severity="error">
+            Could not fetch posts, please try again later
+          </Alert>
+        </Container>
       ) : (
         posts.map(({ _id, author, content }: PostDTO) => (
           <Post
