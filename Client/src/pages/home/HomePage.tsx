@@ -19,7 +19,7 @@ const Loader = styled(CircularProgress)({ margin: "30px auto" });
 export const HomePage = () => {
   const navigate = useNavigate();
 
-  const { data, isLoading } = useQuery<PostDTO[]>(
+  const { data: posts, isLoading } = useQuery<PostDTO[]>(
     "posts",
     async () => (await backendAxiosInstance.get("/posts")).data
   );
@@ -29,7 +29,7 @@ export const HomePage = () => {
       {isLoading ? (
         <Loader />
       ) : (
-        data.map(({ _id, author, content }: PostDTO) => (
+        posts.map(({ _id, author, content }: PostDTO) => (
           <Post
             author={{
               fullName: "",
