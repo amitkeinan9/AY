@@ -1,22 +1,14 @@
 import { css } from "@emotion/react";
-import { deepPurple } from "@mui/material/colors";
 
 export const sidebarContainerStyles = css({
-  width: "15vw",
+  width: "20vw",
   marginLeft: "8vw",
   padding: "30px",
   height: "100%",
   display: "flex",
   flexDirection: "column",
   justifyContent: "space-between",
-});
-
-export const titleStyles = css({
-  fontWeight: "bold",
-  color: deepPurple[500],
-  fontSize: "2rem",
-  marginTop: 15,
-  marginBottom: 10,
+  boxSizing: "border-box",
 });
 
 export const navigationLinkStyles = css({
