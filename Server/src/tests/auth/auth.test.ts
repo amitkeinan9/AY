@@ -27,7 +27,7 @@ let accessToken: string;
 let refreshToken: string;
 
 describe("Auth tests", () => {
-  test("Test register", async () => {    
+  test("Test register", async () => {
     const response = await request(app)
       .post("/auth/register")
       .send(user);
@@ -60,7 +60,7 @@ describe("Auth tests", () => {
   });
 
   test("Test logout", async () => {
-      const response = await request(app)
+    const response = await request(app)
       .get("/auth/logout")
       .set("Authorization", "Bearer " + refreshToken)
       .send();
@@ -70,12 +70,21 @@ describe("Auth tests", () => {
 
   test("Test logout when the user wasn't logged in", async () => {
     const response = await request(app)
-    .get("/auth/logout")
-    .set("Authorization", "Bearer " + refreshToken)
-    .send();
+      .get("/auth/logout")
+      .set("Authorization", "Bearer " + refreshToken)
+      .send();
 
-  expect(response.statusCode).toBe(401);
-});
+    expect(response.statusCode).toBe(401);
+  });
+
+  test("Test logout when the user wasn't logged in", async () => {
+    const response = await request(app)
+      .get("/auth/logout")
+      .set("Authorization", "Bearer " + refreshToken)
+      .send();
+
+    expect(response.statusCode).toBe(401);
+  });
 
   test("Test refresh token", async () => {
     const loginResponse = await request(app)
@@ -93,7 +102,7 @@ describe("Auth tests", () => {
     refreshToken = response.body.refreshToken;
   });
 
-  test("Test double use of refresh token", async () => {    
+  test("Test double use of refresh token", async () => {
     const response = await request(app)
       .get("/auth/refresh")
       .set("Authorization", "Bearer " + refreshToken)
@@ -110,7 +119,7 @@ describe("Auth tests", () => {
     refreshToken = response1.body.refreshToken;
   });
 
-  test("Test double use of the same refresh token", async () => {  
+  test("Test double use of the same refresh token", async () => {
     const response = await request(app)
       .get("/auth/refresh")
       .set("Authorization", "Bearer " + refreshToken)
