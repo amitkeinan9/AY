@@ -31,6 +31,7 @@ export const HomePage = () => {
       ) : (
         posts.map(({ _id, author, content }: PostDTO) => (
           <Post
+            // TODO: Fix after adding pictures usernames and names
             author={{
               fullName: "",
               username: author.email,
