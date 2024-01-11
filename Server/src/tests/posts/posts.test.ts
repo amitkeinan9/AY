@@ -6,7 +6,6 @@ import { posts, seedDB } from "../utils/seedDB";
 import { PostDTO } from "../../BL/posts/types";
 
 let app: Express;
-
 let accessToken: string;
 
 beforeAll(async () => {
@@ -89,8 +88,7 @@ describe("Get posts tests", () => {
       expect(response.statusCode).toBe(200);
 
       response.body.forEach(({ _id, author }: PostDTO) => {
-        console.log(author);
-        expect(author).not.toHaveProperty("password");
+        expect(author).not.toHaveProperty("refreshTokens");
         expect(author).not.toHaveProperty("password");
         expect(author).not.toHaveProperty("isGoogleUser");
         expect(author).toHaveProperty("email");
