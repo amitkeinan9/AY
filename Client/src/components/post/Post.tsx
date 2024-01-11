@@ -19,7 +19,7 @@ interface PostProps {
   };
   content: string;
   image?: string;
-  comments?: number;
+  commentsCount?: number;
   onClick?: () => void;
 }
 
@@ -36,7 +36,7 @@ const Image = styled("img")(imageStyles);
 const CommentIcon = styled(ChatBubbleOutlineOutlinedIcon)(commentIconStyles);
 
 export const Post = (props: PostProps) => {
-  const { author, content, comments, image, onClick } = props;
+  const { author, content, commentsCount, image, onClick } = props;
 
   return (
     <PostContainer onClick={onClick} isClickable={onClick !== undefined}>
@@ -50,9 +50,9 @@ export const Post = (props: PostProps) => {
         <div>{content}</div>
         {image && <Image src={image} />}
 
-        {comments !== undefined && (
+        {commentsCount !== undefined && (
           <PostFooter>
-            <CommentIcon /> {comments}
+            <CommentIcon /> {commentsCount}
           </PostFooter>
         )}
       </div>
