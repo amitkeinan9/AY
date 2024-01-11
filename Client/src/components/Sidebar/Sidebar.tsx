@@ -1,14 +1,6 @@
-import {
-  Drawer,
-  Button,
-  Box,
-  Typography,
-  Alert,
-  AlertTitle,
-} from "@mui/material";
+import { Button, Box, Alert, AlertTitle } from "@mui/material";
 import { Home as HomeIcon, Person as PersonIcon } from "@mui/icons-material";
 import {
-  titleStyles,
   activeButtonStyles,
   sidebarContainerStyles,
   buttonsContainerStyles,
@@ -18,7 +10,6 @@ import styled from "@emotion/styled";
 import { useLogout } from "./useLogout";
 import { NavigationLink } from "./NavigationLink";
 
-const Title = styled(Typography)(titleStyles);
 const ButtonsContainer = styled(Box)(buttonsContainerStyles);
 const ActiveButton = styled(Button)(activeButtonStyles);
 const SidebarContainer = styled(Box)(sidebarContainerStyles);
@@ -28,10 +19,10 @@ export const Sidebar = () => {
   const { handleLogout } = useLogout(setError);
 
   return (
-    <Drawer variant="permanent" anchor="left">
+    <div>
       <SidebarContainer>
         <ButtonsContainer>
-          <Title>AY</Title>
+          <img src="src/assets/logo.svg" width="50" />
           <NavigationLink text="Home" path="/home" Icon={HomeIcon} />
           <NavigationLink text="Profile" path="/profile" Icon={PersonIcon} />
         </ButtonsContainer>
@@ -50,6 +41,6 @@ export const Sidebar = () => {
           )}
         </ButtonsContainer>
       </SidebarContainer>
-    </Drawer>
+    </div>
   );
 };
