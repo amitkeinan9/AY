@@ -1,5 +1,5 @@
 import express from "express";
-import authController from "../controllers/auth_controller";
+import authController from "../controllers/authController";
 import { OAuth2Client } from "google-auth-library";
 
 export const getAuthRouter = (oauth2ClientMock?: Partial<OAuth2Client>) => {

@@ -30,6 +30,8 @@ export const theme = createTheme(
           },
           outlinedPrimary: {
             "&:hover": {
+              borderWidth: "2px",
+
               borderColor: palette.palette.primary.dark,
               backgroundColor: palette.palette.primary.dark,
               color: "white",
