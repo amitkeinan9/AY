@@ -2,14 +2,13 @@ import request from "supertest";
 import initApp from "../../../app";
 import mongoose from "mongoose";
 import { Express } from "express";
-import User from "../../../models/user_model";
+import User from "../../../models/userModel";
 import { existingGoogleUser } from "./loginTestData";
 
 let app: Express;
 
 beforeAll(async () => {
   app = await initApp();
-  console.log("beforeAll");
 
   // Reset data
   await User.deleteMany({
