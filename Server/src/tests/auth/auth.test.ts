@@ -13,6 +13,7 @@ const user = {
 
 beforeAll(async () => {
   process.env.DB_URL = "mongodb://localhost:27017/AY_testing";
+  process.env.JWT_EXPIRATION = "3s";
   app = await initApp();
 
   // Reset data
@@ -34,7 +35,7 @@ describe("Auth tests", () => {
     expect(response.statusCode).toBe(200);
   });
 
-  test("Test register exist email", async () => {
+  test("Test register with an existing email", async () => {
     const response = await request(app)
       .post("/auth/register")
       .send(user);
@@ -66,6 +67,36 @@ describe("Auth tests", () => {
       .send();
 
     expect(response.statusCode).toBe(200);
+  });
+
+  test("Test forbidden access without token", async () => {
+    const response = await request(app).get("/posts");
+    expect(response.statusCode).toBe(401);
+  });
+
+  test("Test access with valid token", async () => {
+    const response = await request(app)
+      .get("/posts")
+      .set("Authorization", "JWT " + accessToken);
+    expect(response.statusCode).toBe(200);
+  });
+
+  test("Test access with invalid token", async () => {
+    const response = await request(app)
+      .get("/posts")
+      .set("Authorization", "JWT 1" + accessToken);
+    expect(response.statusCode).toBe(401);
+  });
+
+  jest.setTimeout(10000);
+
+  test("Test access after timeout of token", async () => {
+    await new Promise(resolve => setTimeout(() => resolve("done"), 5000));
+
+    const response = await request(app)
+      .get("/posts")
+      .set("Authorization", "JWT " + accessToken);
+    expect(response.statusCode).not.toBe(200);
   });
 
   test("Test logout when the user wasn't logged in", async () => {
