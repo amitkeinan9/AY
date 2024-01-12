@@ -41,8 +41,6 @@ export const userNameStyles = css({
     fontSize: '0.9rem'
 });
 
-export const postsContainerStyles = css({});
-
 export const postsTitleStyles = css({
     fontSize: '1.3rem',
     fontWeight: 'bold',
