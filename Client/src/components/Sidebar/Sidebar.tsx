@@ -34,7 +34,7 @@ export const Sidebar = () => {
             Log out
           </ActiveButton>
           {error && (
-            <Alert severity="error" sx={{ mb: 1, width: "60%" }}>
+            <Alert severity="error" sx={{ mb: 1, width: "80%" }}>
               <AlertTitle>Oof</AlertTitle>
               {error}
             </Alert>

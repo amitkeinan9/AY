@@ -6,6 +6,8 @@ import { useNavigate } from "react-router-dom";
 export const useLoginFormActions = (
   email: string,
   password: string,
+  username: string,
+  fullName: string,
   setError: React.Dispatch<React.SetStateAction<string>>
 ) => {
   const [isLoginLoading, setIsLoginLoading] = useState<boolean>(false);
@@ -23,7 +25,7 @@ export const useLoginFormActions = (
     },
   });
 
-  const userData = { email, password };
+  const userData = { email, password, username: username, fullName };
 
   const finishLogin = (tokens: {
     accessToken: string;

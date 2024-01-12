@@ -3,6 +3,7 @@ import express, { Express, Request, Response } from "express";
 import mongoose from "mongoose";
 import bodyParser from "body-parser";
 import postsRouter from "./routers/postsRouter";
+import userRouter from "./routers/userRouter";
 import authMiddleware from "./common/auth_middleware";
 import morgan from "morgan";
 import { getAuthRouter } from "./routers/authRouter";
@@ -39,6 +40,8 @@ const initApp = (config: AppConfig = {}): Promise<Express> =>
       app.use(authMiddleware);
 
       app.use("/posts", postsRouter);
+
+      app.use("/users", userRouter);
 
       resolve(app);
     });
