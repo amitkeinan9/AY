@@ -1,6 +1,7 @@
+
+import User from "../../models/userModel";
 import mongoose from "mongoose";
-// import Post from "../../models/postModel";
-import User from "../../models/user_model";
+import Post from "../../models/postModel";
 
 export const users = [
   {
@@ -42,7 +43,7 @@ export const posts = [
 
 export const seedDB = async () => {
   await User.deleteMany();
-  // await Post.deleteMany();
+  await Post.deleteMany();
   await User.insertMany(users);
-  // await Post.insertMany(posts);
+  await Post.insertMany(posts);
 };

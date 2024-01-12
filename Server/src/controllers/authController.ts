@@ -1,5 +1,5 @@
 import { Request, Response } from "express";
-import User, { IUser } from "../models/user_model";
+import User, { IUser } from "../models/userModel";
 import bcrypt from "bcrypt";
 import jwt, { Secret } from "jsonwebtoken";
 import { OAuth2Client } from "google-auth-library";
@@ -107,7 +107,6 @@ const getGoogleLogin = (oauth2Client: OAuth2Client) => {
           email,
           isGoogleUser: true,
         });
-        console.log("created user");
       } else if (!user.isGoogleUser) {
         return res.status(400).send("Email is already used with password");
       }
@@ -197,6 +196,7 @@ const refresh = async (req: Request, res: Response) => {
           refreshToken: newRefreshToken,
         });
       } catch (err: any) {
+        console.error(err);
         res.sendStatus(401).send(err.message);
       }
     }

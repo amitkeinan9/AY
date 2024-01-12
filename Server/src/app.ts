@@ -2,7 +2,10 @@ import env from "dotenv";
 import express, { Express, Request, Response } from "express";
 import mongoose from "mongoose";
 import bodyParser from "body-parser";
-import { getAuthRouter } from "./routes/auth_route";
+import postsRouter from "./routers/postsRouter";
+import authMiddleware from "./common/auth_middleware";
+import morgan from "morgan";
+import { getAuthRouter } from "./routers/authRouter";
 import { OAuth2Client } from "google-auth-library";
 
 interface AppConfig {
@@ -29,7 +32,13 @@ const initApp = (config: AppConfig = {}): Promise<Express> =>
       app.use(bodyParser.json());
       app.use(bodyParser.urlencoded({ extended: true }));
 
+      app.use(morgan("tiny"));
+
       app.use("/auth", getAuthRouter(config?.oAuthClientMock));
+
+      app.use(authMiddleware);
+
+      app.use("/posts", postsRouter);
 
       resolve(app);
     });
