@@ -33,6 +33,7 @@ export const useLoginFormActions = (
   }) => {
     localStorage.setItem("accessToken", tokens.accessToken);
     localStorage.setItem("refreshToken", tokens.refreshToken);
+    localStorage.setItem("connectedUserEmail", email);
 
     navigate("/home");
   };

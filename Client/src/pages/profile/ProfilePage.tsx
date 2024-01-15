@@ -1,4 +1,4 @@
-import { Alert, Box, CircularProgress, Container, Typography } from "@mui/material"
+import { Box } from "@mui/material"
 import { UserDTO } from "../../types/user";
 import styled from '@emotion/styled';
 import { profileContainerStyles } from "./styles";
@@ -11,12 +11,14 @@ import { OwnPosts } from "./OwnPosts/OwnPosts";
 const ProfileContainer = styled(Box)(profileContainerStyles)
 
 export const ProfilePage = () => {
+  const email = localStorage.getItem('connectedUserEmail');
+
   const {
     data: connectedUser,
     isLoading: isUserLoading,
     isError: isUserError,
   } = useQuery<UserDTO>(
-    ["users"],
+    ["users", email],
     async () => (await backendAxiosInstance.get(`/users/me`)).data);
 
   const {
@@ -24,8 +26,8 @@ export const ProfilePage = () => {
     isLoading: isPostsLoading,
     isError: isPostsError,
   } = useQuery<PostDTO[]>(
-    "myPosts",
-    async () => (await backendAxiosInstance.get("/posts")).data
+    ["myPosts", email],
+    async () => (await backendAxiosInstance.get("/posts/own")).data
   );
 
   return (
