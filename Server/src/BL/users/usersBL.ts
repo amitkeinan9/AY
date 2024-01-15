@@ -1,12 +1,6 @@
 import { UserDTO } from "./types";
 import User from "../../models/userModel";
-import { PipelineStage } from "mongoose";
-import { cleanResults, getFilterById } from "./aggregationStages";
 
-export const getUser = async (_id: string): Promise<UserDTO> => {
-    const aggregationStages: PipelineStage[] = [getFilterById(_id), cleanResults];
-
-    const users: UserDTO[] = await User.aggregate<UserDTO>(aggregationStages).exec();
-
-    return users[0];
+export const getUser = async (id: string): Promise<UserDTO> => {
+    return (await User.findById(id).select('-password -isGoogleUser -refreshTokens').exec() as UserDTO);
 };

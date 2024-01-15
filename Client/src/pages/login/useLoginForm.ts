@@ -13,6 +13,8 @@ export const useLoginForm = () => {
   const resetForm = () => {
     setEmail("");
     setPassword("");
+    // setUsername("");
+    // setFullName("");
     setError("");
   };
 

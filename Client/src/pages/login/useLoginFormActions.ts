@@ -25,7 +25,7 @@ export const useLoginFormActions = (
     },
   });
 
-  const userData = { email, password, username: username, fullName };
+  const userData = { email, password, username, fullName };
 
   const finishLogin = (tokens: {
     accessToken: string;
