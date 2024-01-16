@@ -1,11 +1,19 @@
 import axios from "axios";
 
 export const backendAxiosInstance = axios.create({
-  baseURL: "/api",
-  headers: {
-    Authorization: `Bearer ${localStorage.getItem("accessToken")}`,
-  },
+  baseURL: "/api"
 });
+
+backendAxiosInstance.interceptors.request.use(
+  config => {
+    config.headers['Authorization'] = `Bearer ${localStorage.getItem("accessToken")}`;
+
+    return config;
+  },
+  error => {
+    return Promise.reject(error);
+  }
+);
 
 backendAxiosInstance.interceptors.response.use(
   (response) => {
@@ -20,7 +28,7 @@ backendAxiosInstance.interceptors.response.use(
 
     if (
       error.response.status === 401 &&
-      originalRequest._retry < 3 &&
+      originalRequest._retry < 1 &&
       originalRequest.url !== "/auth/refresh"
     ) {
       originalRequest._retry++;
@@ -34,8 +42,6 @@ backendAxiosInstance.interceptors.response.use(
 
       localStorage.setItem("accessToken", accessToken);
       localStorage.setItem("refreshToken", refreshToken);
-      axios.defaults.headers.common["Authorization"] = "Bearer " + accessToken;
-      originalRequest.headers["Authorization"] = "Bearer " + accessToken;
       return backendAxiosInstance(originalRequest);
     }
     return Promise.reject(error);
