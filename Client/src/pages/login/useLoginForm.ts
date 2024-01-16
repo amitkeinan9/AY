@@ -5,10 +5,16 @@ export const useLoginForm = () => {
   const [inLoginMode, setInLoginMode] = useState<boolean>(true);
   const [email, setEmail] = useState<string>("");
   const [password, setPassword] = useState<string>("");
+  const [username, setUsername] = useState<string>("yael");
+  const [fullName, setFullName] = useState<string>("yael bucris");
+
+  // Todo: add username and fullName in register
 
   const resetForm = () => {
     setEmail("");
     setPassword("");
+    // setUsername("");
+    // setFullName("");
     setError("");
   };
 
@@ -48,5 +54,7 @@ export const useLoginForm = () => {
     inLoginMode,
     email,
     password,
+    username,
+    fullName
   };
 };

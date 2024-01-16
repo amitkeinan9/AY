@@ -1,7 +1,7 @@
 import { styled } from "@mui/system";
 import { Post } from "../../components/post/Post";
 import { useNavigate } from "react-router-dom";
-import { useQuery } from "react-query";
+import { useQuery } from "@tanstack/react-query";
 import { backendAxiosInstance } from "../../axios/backendInstance";
 import { PostDTO } from "../../types/post";
 import { Alert, CircularProgress } from "@mui/material";
@@ -17,10 +17,10 @@ export const HomePage = () => {
     data: posts,
     isLoading,
     isError,
-  } = useQuery<PostDTO[]>(
-    "posts",
-    async () => (await backendAxiosInstance.get("/posts")).data
-  );
+  } = useQuery<PostDTO[]>({
+    queryKey: ["posts"],
+    queryFn: async () => (await backendAxiosInstance.get("/posts")).data,
+  });
 
   return (
     <PostsList>

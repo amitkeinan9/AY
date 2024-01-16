@@ -30,6 +30,9 @@ const createTokens = async (user: IUser) => {
 const register = async (req: Request, res: Response) => {
   const email = req.body.email;
   const password = req.body.password;
+  const username = req.body.username;
+  const fullName = req.body.fullName;
+
   if (!email || !password) {
     return res.status(400).send("Invalid email or password");
   }
@@ -43,8 +46,10 @@ const register = async (req: Request, res: Response) => {
     const salt = await bcrypt.genSalt(10);
     const encryptedPassword = await bcrypt.hash(password, salt);
     const user: IUser = await User.create({
-      email: email,
+      email,
       password: encryptedPassword,
+      username,
+      fullName,
     });
 
     // Login
@@ -191,6 +196,7 @@ const refresh = async (req: Request, res: Response) => {
         
         userDb.refreshTokens.push(newRefreshToken);
         await userDb.save();
+        console.log("hreerrr");
         return res.status(200).send({
           accessToken: newAccessToken,
           refreshToken: newRefreshToken,

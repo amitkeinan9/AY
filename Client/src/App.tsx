@@ -12,8 +12,8 @@ import { GoogleOAuthProvider } from "@react-oauth/google";
 import { Layout } from "./components/Layout/Layout";
 import { ProfilePage } from "./pages/profile/ProfilePage";
 import { PostPage } from "./pages/post/PostPage";
-import { QueryClient, QueryClientProvider } from "react-query";
-import { useState } from "react";
+import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
+import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 
 const router = createBrowserRouter([
   {
@@ -44,14 +44,15 @@ const router = createBrowserRouter([
   },
 ]);
 
-function App() {
-  const [queryClient] = useState<QueryClient>(new QueryClient());
+const queryClient = new QueryClient();
 
+function App() {
   return (
     <ThemeProvider theme={theme}>
       <GoogleOAuthProvider clientId="940068358470-1vud6iv0uj41vtkrho6msob9g6bhbm78.apps.googleusercontent.com">
         <QueryClientProvider client={queryClient}>
           <RouterProvider router={router} />
+          <ReactQueryDevtools initialIsOpen={false} />
         </QueryClientProvider>
       </GoogleOAuthProvider>
     </ThemeProvider>

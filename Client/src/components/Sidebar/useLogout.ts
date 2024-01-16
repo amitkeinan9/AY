@@ -10,17 +10,19 @@ export const useLogout = (
         try {
             await axios.create({
                 headers: {
-                  Authorization: `Bearer ${localStorage.getItem("refreshToken")}`,
+                    Authorization: `Bearer ${localStorage.getItem("refreshToken")}`,
                 },
-              }).get("/api/auth/logout");
-              
+            }).get("/api/auth/logout");
+
             localStorage.setItem("accessToken", "");
             localStorage.setItem("refreshToken", "");
             navigate("/login");
-        } catch (error) {           
+        } catch (error) {
             if (axios.isAxiosError(error)) {
                 if (error.response?.status !== 500) {
-                    setError(error.response?.data);
+                    localStorage.setItem("accessToken", "");
+                    localStorage.setItem("refreshToken", "");
+                    navigate("/login");
                 } else {
                     setError("An unknown error occurred, please try again later");
                 }

@@ -44,6 +44,8 @@ const LoginPage: React.FC = () => {
     toggleMode,
     email,
     password,
+    username,
+    fullName,
     setError,
   } = useLoginForm();
 
@@ -54,7 +56,7 @@ const LoginPage: React.FC = () => {
     isRegisterLoading,
     handleGoogleLogin,
     isGoogleLoading,
-  } = useLoginFormActions(email, password, setError);
+  } = useLoginFormActions(email, password, username, fullName, setError);
 
   return (
     <PageWrapper>
