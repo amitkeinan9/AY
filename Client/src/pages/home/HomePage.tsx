@@ -35,7 +35,7 @@ export const HomePage = () => {
           </Alert>
         </Container>
       ) : (
-        posts.map(({ _id, author, content, commentsCount }: PostDTO) => (
+        posts.map(({ _id, author, content, commentsCount, image }: PostDTO) => (
           <Post
             // TODO: Fix after adding pictures usernames and names
             author={{
@@ -44,6 +44,7 @@ export const HomePage = () => {
               profilePic: "",
             }}
             content={content}
+            image={image}
             commentsCount={commentsCount}
             onClick={() => navigate(`/posts/${_id}`)}
           />

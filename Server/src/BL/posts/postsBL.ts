@@ -1,6 +1,4 @@
 import { ObjectId, PipelineStage } from "mongoose";
-import fs from "fs/promises";
-import path from "path";
 import {
   cleanResults,
   countComments,

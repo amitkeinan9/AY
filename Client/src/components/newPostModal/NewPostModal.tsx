@@ -4,7 +4,6 @@ import Avatar from "@mui/material/Avatar/Avatar";
 import IconButton from "@mui/material/IconButton/IconButton";
 import TextField from "@mui/material/TextField/TextField";
 import Divider from "@mui/material/Divider/Divider";
-import Button from "@mui/material/Button/Button";
 import Modal from "@mui/material/Modal/Modal";
 
 import {
@@ -18,8 +17,11 @@ import {
   previewContainerStyles,
   removeImageButtonStyles,
 } from "./styles";
-import { useSelectImage } from "./useSelectImage";
+import { useSelectImage } from "../../hooks/useSelectImage";
 import { useNewPostForm } from "./useNewPostForm";
+import { LoadingButton } from "../loadingButton/LoadingButton";
+import { Alert } from "@mui/material";
+import { useEffect } from "react";
 
 interface NewPostModalProps {
   isOpen: boolean;
@@ -39,10 +41,23 @@ const PreviewContainer = styled("div")(previewContainerStyles);
 export const NewPostModal = (props: NewPostModalProps) => {
   const { isOpen, onClose } = props;
   const { selectImage, removeImage, preview, selectedImage } = useSelectImage();
-  const { content, handleContentChange, isFormValid, createPost } =
-    useNewPostForm({
-      image: selectedImage,
-    });
+  const {
+    content,
+    handleContentChange,
+    isFormValid,
+    createPost,
+    isPending,
+    didFail,
+    resetForm,
+  } = useNewPostForm({
+    image: selectedImage,
+    onSaveSuccess: onClose,
+  });
+
+  useEffect(() => {
+    removeImage();
+    resetForm();
+  }, [isOpen]);
 
   return (
     <Modal open={isOpen} onClose={onClose}>
@@ -53,6 +68,7 @@ export const NewPostModal = (props: NewPostModalProps) => {
           </IconButton>
         </ModalHeader>
 
+        {didFail && <Alert severity="error">Failed to save post</Alert>}
         <ModalContent>
           <ProfilePhoto
             sizes=""
@@ -104,13 +120,14 @@ export const NewPostModal = (props: NewPostModalProps) => {
               accept="image/png, image/gif, image/jpeg"
             />
           </IconButton>
-          <Button
+          <LoadingButton
             variant="contained"
             disabled={!isFormValid}
             onClick={createPost}
+            isLoading={isPending}
           >
             Post
-          </Button>
+          </LoadingButton>
         </ModalFooter>
       </ModalBody>
     </Modal>

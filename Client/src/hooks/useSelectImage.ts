@@ -26,12 +26,28 @@ export const useSelectImage = () => {
     setSelectedImage(e.target.files[0]);
   };
 
+  const readFileAsBase64 = (file: File): Promise<string> => {
+    return new Promise((resolve, reject) => {
+      const reader = new FileReader();
+
+      reader.onload = () => {
+        resolve(reader.result.toString());
+      };
+
+      reader.onerror = (error) => {
+        reject(error);
+      };
+
+      reader.readAsDataURL(file);
+    });
+  };
+
   const removeImage = () => {
     setSelectedImage(undefined);
   };
 
   return {
-    selectedImage,
+    selectedImage: selectedImage ? readFileAsBase64(selectedImage) : undefined,
     preview,
     selectImage,
     removeImage,

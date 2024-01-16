@@ -1,7 +1,8 @@
 import env from "dotenv";
 import express, { Express, Request, Response } from "express";
 import mongoose from "mongoose";
-import fs from "fs/promises";
+import fsProm from "fs/promises";
+import fs from "fs";
 import path from "path";
 import bodyParser from "body-parser";
 import postsRouter from "./routers/postsRouter";
@@ -29,9 +30,11 @@ const initApp = (config: AppConfig = {}): Promise<Express> =>
       throw new Error("DB_URL is not defined");
     }
 
-    await fs.mkdir(path.resolve("public", "images"), { recursive: true });
-    await fs.mkdir(path.resolve("public", "images", "profiles"));
-    await fs.mkdir(path.resolve("public", "images", "posts"));
+    if (!fs.existsSync(path.resolve("public", "images"))) {
+      await fsProm.mkdir(path.resolve("public", "images"), { recursive: true });
+      await fsProm.mkdir(path.resolve("public", "images", "profiles"));
+      await fsProm.mkdir(path.resolve("public", "images", "posts"));
+    }
 
     mongoose.connect(url).then(() => {
       const app = express();

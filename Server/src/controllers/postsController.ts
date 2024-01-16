@@ -17,7 +17,7 @@ export const getOwnPosts = async (req: AuthRequest, res: Response) => {
 };
 
 export const saveNewPost = async (req: AuthRequest, res: Response) => {
-  if (!req.body.content) {
+  if (!req.body.content && !req.body.image) {
     return res.send(StatusCodes.BAD_REQUEST);
   }
 

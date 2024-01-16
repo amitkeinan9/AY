@@ -30,5 +30,5 @@ export const saveImage = async (
     { encoding: "base64" }
   );
 
-  return `${process.env.SERVER_URL}/public/images/posts/${fileName}`;
+  return `${process.env.SERVER_URL}/public/images/posts/${fullFileName}`;
 };
