@@ -181,14 +181,14 @@ const refresh = async (req: Request, res: Response) => {
           { expiresIn: process.env.JWT_EXPIRATION }
         );
         const newRefreshToken = jwt.sign(
-          { _id: userDb._id },
+          { _id: userDb._id, random: Math.random() },
           process.env.JWT_REFRESH_SECRET as Secret
         );
 
         userDb.refreshTokens = userDb.refreshTokens.filter(
           (t) => t !== refreshToken
         );
-
+        
         userDb.refreshTokens.push(newRefreshToken);
         await userDb.save();
         return res.status(200).send({
