@@ -1,6 +1,8 @@
 import env from "dotenv";
 import express, { Express, Request, Response } from "express";
 import mongoose from "mongoose";
+import fs from "fs/promises";
+import path from "path";
 import bodyParser from "body-parser";
 import postsRouter from "./routers/postsRouter";
 import userRouter from "./routers/userRouter";
@@ -16,7 +18,7 @@ interface AppConfig {
 env.config();
 
 const initApp = (config: AppConfig = {}): Promise<Express> =>
-  new Promise<Express>((resolve) => {
+  new Promise<Express>(async (resolve) => {
     const db = mongoose.connection;
     const url = process.env.DB_URL;
 
@@ -27,6 +29,10 @@ const initApp = (config: AppConfig = {}): Promise<Express> =>
       throw new Error("DB_URL is not defined");
     }
 
+    await fs.mkdir(path.resolve("public", "images"), { recursive: true });
+    await fs.mkdir(path.resolve("public", "images", "profiles"));
+    await fs.mkdir(path.resolve("public", "images", "posts"));
+
     mongoose.connect(url).then(() => {
       const app = express();
 
@@ -34,6 +40,8 @@ const initApp = (config: AppConfig = {}): Promise<Express> =>
       app.use(bodyParser.urlencoded({ extended: true }));
 
       app.use(morgan("tiny"));
+
+      app.use("/public", express.static("public"));
 
       app.use("/auth", getAuthRouter(config?.oAuthClientMock));
 

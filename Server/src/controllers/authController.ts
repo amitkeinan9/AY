@@ -193,10 +193,9 @@ const refresh = async (req: Request, res: Response) => {
         userDb.refreshTokens = userDb.refreshTokens.filter(
           (t) => t !== refreshToken
         );
-        
+
         userDb.refreshTokens.push(newRefreshToken);
         await userDb.save();
-        console.log("hreerrr");
         return res.status(200).send({
           accessToken: newAccessToken,
           refreshToken: newRefreshToken,
