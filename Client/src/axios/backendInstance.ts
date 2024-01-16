@@ -13,12 +13,17 @@ backendAxiosInstance.interceptors.response.use(
   },
   async function (error) {
     const originalRequest = error.config;
+
+    if (!originalRequest._retry) {
+      originalRequest._retry = 0;
+    }
+
     if (
       error.response.status === 401 &&
-      !originalRequest._retry &&
+      originalRequest._retry < 3 &&
       originalRequest.url !== "/auth/refresh"
     ) {
-      originalRequest._retry = true;
+      originalRequest._retry++;
       const { accessToken, refreshToken } = (
         await backendAxiosInstance.get("/auth/refresh", {
           headers: {
