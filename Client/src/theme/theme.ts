@@ -37,6 +37,13 @@ export const theme = createTheme(
               color: "white",
             },
           },
+          containedPrimary: {
+            border: "none",
+            boxShadow: "none",
+            "&:hover": {
+              boxShadow: "none",
+            },
+          },
         },
       },
     },
