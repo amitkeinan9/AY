@@ -49,7 +49,7 @@ const register = async (req: Request, res: Response) => {
       email,
       password: encryptedPassword,
       username,
-      fullName
+      fullName,
     });
 
     // Login
@@ -196,6 +196,7 @@ const refresh = async (req: Request, res: Response) => {
 
         userDb.refreshTokens.push(newRefreshToken);
         await userDb.save();
+        console.log("hreerrr");
         return res.status(200).send({
           accessToken: newAccessToken,
           refreshToken: newRefreshToken,
