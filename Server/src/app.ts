@@ -7,10 +7,11 @@ import path from "path";
 import bodyParser from "body-parser";
 import postsRouter from "./routers/postsRouter";
 import userRouter from "./routers/userRouter";
-import authMiddleware from "./common/auth_middleware";
+import validateAuth from "./middlewares/validateAuth";
 import morgan from "morgan";
 import { getAuthRouter } from "./routers/authRouter";
 import { OAuth2Client } from "google-auth-library";
+import { errorHandler } from "./middlewares/errorMiddleware";
 
 interface AppConfig {
   oAuthClientMock?: Partial<OAuth2Client>;
@@ -48,11 +49,13 @@ const initApp = (config: AppConfig = {}): Promise<Express> =>
 
       app.use("/auth", getAuthRouter(config?.oAuthClientMock));
 
-      app.use(authMiddleware);
+      app.use(validateAuth);
 
       app.use("/posts", postsRouter);
 
       app.use("/users", userRouter);
+
+      app.use(errorHandler);
 
       resolve(app);
     });
