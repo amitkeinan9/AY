@@ -70,10 +70,8 @@ export const NewPostModal = (props: NewPostModalProps) => {
 
         {didFail && <Alert severity="error">Failed to save post</Alert>}
         <ModalContent>
-          <ProfilePhoto
-            sizes=""
-            src="https://encrypted-tbn0.gstatic.com/licensed-image?q=tbn:ANd9GcQi8RStSgyI6RaRYbUxcZTo4s5uzv8sUTTbgAoXEKaZsJz8hD0S4AEOKafJ-n1Y01Xo25FXlO_VgDDtoks"
-          />
+          {/* TODO: Display real image */}
+          <ProfilePhoto src="https://encrypted-tbn0.gstatic.com/licensed-image?q=tbn:ANd9GcQi8RStSgyI6RaRYbUxcZTo4s5uzv8sUTTbgAoXEKaZsJz8hD0S4AEOKafJ-n1Y01Xo25FXlO_VgDDtoks" />
 
           <PostContainer>
             <TextField

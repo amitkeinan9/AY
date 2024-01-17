@@ -20,7 +20,7 @@ export const loginWithGoogle = async (
     // Create new user
     user = await User.create({
       email: payload.email,
-      username: payload.name,
+      fullName: payload.name,
       profilePic: payload.picture,
       isGoogleUser: true,
     });
