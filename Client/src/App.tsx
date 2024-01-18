@@ -14,6 +14,7 @@ import { ProfilePage } from "./pages/profile/ProfilePage";
 import { PostPage } from "./pages/post/PostPage";
 import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+import { EditProfilePage } from "./pages/editProfile/EditProfilePage";
 
 const router = createBrowserRouter([
   {
@@ -31,6 +32,10 @@ const router = createBrowserRouter([
       {
         path: "profile",
         element: <ProfilePage />,
+      },
+      {
+        path: "edit-profile",
+        element: <EditProfilePage />,
       },
       {
         path: "posts/:postId",

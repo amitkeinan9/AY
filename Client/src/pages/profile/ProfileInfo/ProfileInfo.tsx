@@ -9,6 +9,7 @@ import {
     userNameStyles
 } from "./styles";
 import { UserDTO } from "../../../types/user";
+import { useNavigate } from "react-router-dom";
 
 interface Props {
     isLoading: boolean;
@@ -24,6 +25,8 @@ const UserName = styled(Typography)(userNameStyles)
 const EditProfileButton = styled(Button)(editProfileButtonStyles);
 
 export const ProfileInfo = ({ isLoading, isError, connectedUser }: Props) => {
+    const navigate = useNavigate();
+
     return (
         <ProfileDataContainer>
             {isLoading ? (
@@ -47,7 +50,7 @@ export const ProfileInfo = ({ isLoading, isError, connectedUser }: Props) => {
                             <UserName>{connectedUser.username}</UserName>
                         </Box>
                     </ProfileData>
-                    <EditProfileButton>Edit profile</EditProfileButton>
+                    <EditProfileButton onClick={() => navigate('/edit-profile')}>Edit profile</EditProfileButton>
                 </>
             )}
         </ProfileDataContainer>
