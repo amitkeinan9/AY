@@ -44,7 +44,6 @@ export const saveNewPost = async (
       throw new BadRequestError("Cannot post empty post");
     }
 
-    console.log(req.user);
     const newPost: PostDTO = await createPost(
       req.user?._id,
       req.body.content,
