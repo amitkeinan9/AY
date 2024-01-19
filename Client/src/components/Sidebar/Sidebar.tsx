@@ -20,10 +20,6 @@ export const Sidebar = () => {
   const { handleLogout } = useLogout(setError);
   const [isNewPostOpen, setIsNewPostOpen] = useState<boolean>(false);
 
-  const openNewPostDialog = () => {
-    setIsNewPostOpen(true);
-  };
-
   return (
     <div>
       <SidebarContainer>
@@ -34,7 +30,7 @@ export const Sidebar = () => {
         </ButtonsContainer>
         <ButtonsContainer>
           <ActiveButton
-            onClick={openNewPostDialog}
+            onClick={() => setIsNewPostOpen(true)}
             variant="outlined"
             fullWidth
           >

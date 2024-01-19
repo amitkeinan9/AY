@@ -71,7 +71,7 @@ const refresh = async (req: Request, res: Response, next: NextFunction) => {
   const refreshToken = authHeader && authHeader.split(" ")[1]; // Bearer <token>
   try {
     const newTokens = await refreshAccessTokens(refreshToken);
-    console.log(newTokens);
+
     res.status(StatusCodes.OK).json(newTokens);
   } catch (e) {
     next(e);

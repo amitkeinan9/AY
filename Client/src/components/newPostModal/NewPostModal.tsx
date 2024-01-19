@@ -11,7 +11,6 @@ import {
   imageStyles,
   modalContentStyles,
   modalFooterlStyles,
-  modalHeaderStyles,
   modalStyles,
   postContainerStyles,
   previewContainerStyles,
@@ -29,7 +28,6 @@ interface NewPostModalProps {
 }
 
 const ModalBody = styled("div")(modalStyles);
-const ModalHeader = styled("div")(modalHeaderStyles);
 const ProfilePhoto = styled(Avatar)(avatarStyles);
 const ModalContent = styled("div")(modalContentStyles);
 const ModalFooter = styled("div")(modalFooterlStyles);
@@ -62,11 +60,11 @@ export const NewPostModal = (props: NewPostModalProps) => {
   return (
     <Modal open={isOpen} onClose={onClose}>
       <ModalBody>
-        <ModalHeader>
+        <div>
           <IconButton onClick={onClose}>
             <Close htmlColor="rgb(15, 20, 25)" />
           </IconButton>
-        </ModalHeader>
+        </div>
 
         {didFail && <Alert severity="error">Failed to save post</Alert>}
         <ModalContent>

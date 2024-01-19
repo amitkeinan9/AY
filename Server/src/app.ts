@@ -40,7 +40,7 @@ const initApp = (config: AppConfig = {}): Promise<Express> =>
     mongoose.connect(url).then(() => {
       const app = express();
 
-      app.use(bodyParser.json());
+      app.use(bodyParser.json({ limit: "30mb" }));
       app.use(bodyParser.urlencoded({ extended: true }));
 
       app.use(morgan("tiny"));

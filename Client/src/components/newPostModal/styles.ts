@@ -6,9 +6,14 @@ export const modalStyles = css({
   width: "560px",
   padding: "10px",
   borderRadius: "15px",
+  "@media (max-width: 700px)": {
+    width: "100%",
+    height: "100%",
+    borderRadius: "0",
+    margin: "0",
+    boxSizing: "border-box",
+  },
 });
-
-export const modalHeaderStyles = css();
 
 export const avatarStyles = css({
   width: 48,
@@ -20,6 +25,11 @@ export const modalContentStyles = css({
   flexDirection: "row",
   gap: 15,
   padding: "10px",
+  maxHeight: "60vh",
+  "@media (max-width: 700px)": {
+    maxHeight: "calc(100vh - 130px)",
+  },
+  overflow: "scroll",
 });
 
 export const modalFooterlStyles = css({
