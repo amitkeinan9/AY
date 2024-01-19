@@ -3,7 +3,7 @@ import { IUser } from "./userModel";
 
 export interface IPost extends Document {
   author: IUser;
-  content: string;
+  content?: string;
   image?: string;
   comments: {
     author: IUser;
@@ -18,7 +18,7 @@ const postSchema: Schema = new mongoose.Schema<IPost>({
   },
   content: {
     type: String,
-    required: true,
+    required: false,
   },
   image: {
     type: String,
