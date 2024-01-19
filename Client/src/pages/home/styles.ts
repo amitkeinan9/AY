@@ -8,5 +8,3 @@ export const postListStyles = css({
   borderRight: "1px solid rgba(239,243,244,1.00)",
   borderLeft: "1px solid rgba(239,243,244,1.00)",
 });
-
-export const containerStyles = css({ margin: "30px auto" });

@@ -7,6 +7,7 @@ import { PostDTO } from "../../types/post";
 import { ProfileInfo } from "./ProfileInfo/ProfileInfo";
 import { OwnPosts } from "./OwnPosts/OwnPosts";
 import { useQuery } from "@tanstack/react-query";
+import { PostList } from "../../components/postList/PostList";
 
 const ProfileContainer = styled(Box)(profileContainerStyles);
 
@@ -38,10 +39,10 @@ export const ProfilePage = () => {
         isError={isUserError}
         connectedUser={connectedUser}
       />
-      <OwnPosts
-        isLoading={isPostsLoading}
-        isError={isPostsError}
+      <PostList
         posts={posts}
+        isError={isPostsError}
+        isLoading={isPostsLoading}
       />
     </ProfileContainer>
   );

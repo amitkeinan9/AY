@@ -10,17 +10,14 @@ import {
   postHeaderStyles,
   usernameStyles,
 } from "./styles";
+import { Author, PostDTO } from "../../types/post";
 
 interface PostProps {
-  author: {
-    fullName: string;
-    username: string;
-    profilePic: string;
-  };
-  content: string;
+  author: Author;
+  content?: string;
   image?: string;
   commentsCount?: number;
-  onClick?: () => void;
+  onClick?: (post: Omit<PostDTO, "_id">) => void;
 }
 
 const PostContainer = styled("div")(
@@ -38,8 +35,17 @@ const CommentIcon = styled(ChatBubbleOutlineOutlinedIcon)(commentIconStyles);
 export const Post = (props: PostProps) => {
   const { author, content, commentsCount, image, onClick } = props;
 
+  const handleClick = () => {
+    onClick({
+      author,
+      commentsCount,
+      content,
+      image,
+    });
+  };
+
   return (
-    <PostContainer onClick={onClick} isClickable={onClick !== undefined}>
+    <PostContainer onClick={handleClick} isClickable={onClick !== undefined}>
       <Avatar alt={author.fullName} src={author.profilePic}></Avatar>
       <div>
         <PostHeader>

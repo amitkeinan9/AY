@@ -1,6 +1,6 @@
 import { NextFunction, Request, Response } from "express";
 import { StatusCodes } from "http-status-codes";
-import { createPost, getPosts } from "../BL/posts/postsBL";
+import { createPost, getPostById, getPosts } from "../BL/posts/postsBL";
 import { PostDTO } from "../BL/posts/types";
 import { AuthRequest } from "../middlewares/validateAuth";
 import { BadRequestError } from "../errors/BadRequestError";
@@ -34,6 +34,20 @@ export const getOwnPosts = async (
   }
 };
 
+export const getPost = async (
+  req: AuthRequest,
+  res: Response,
+  next: NextFunction
+) => {
+  try {
+    const post = await getPostById(req.params.id);
+
+    res.status(StatusCodes.OK).json(post);
+  } catch (e) {
+    next(e);
+  }
+};
+
 export const saveNewPost = async (
   req: AuthRequest,
   res: Response,
@@ -44,7 +58,6 @@ export const saveNewPost = async (
       throw new BadRequestError("Cannot post empty post");
     }
 
-    console.log(req.user);
     const newPost: PostDTO = await createPost(
       req.user?._id,
       req.body.content,
