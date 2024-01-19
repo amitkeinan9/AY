@@ -6,6 +6,7 @@ export const postContainerStyles = css({
   gap: 10,
   border: "1px solid rgba(239,243,244,1.00)",
   borderLeft: "0px",
+  borderRight: "0px",
   borderTop: 0,
   padding: 15,
 });
