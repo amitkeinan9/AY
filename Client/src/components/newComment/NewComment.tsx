@@ -18,24 +18,25 @@ export const NewComment = () => {
   const queryClient = useQueryClient();
 
   const postCommentMutation = useMutation({
-    mutationFn: (comment: { comment: { content: string } }) =>
-      backendAxiosInstance.post(`/posts/${postId}/comments`, comment),
+    mutationFn: (commentContent: string) =>
+      backendAxiosInstance.post(`/posts/${postId}/comments`, {
+        content: commentContent,
+      }),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["posts", postId] });
-      setContent("qmit");
+      setContent("");
     },
   });
 
   const [content, setContent] = useState<string>();
 
   const handleReplyChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    postCommentMutation.reset();
     setContent(e.target.value);
   };
 
   const postComment = () => {
-    postCommentMutation.mutate({
-      comment: { content },
-    });
+    postCommentMutation.mutate(content);
   };
 
   return (
@@ -70,7 +71,7 @@ export const NewComment = () => {
           </LoadingButton>
         </CommentContainer>
         {postCommentMutation.isError && (
-          <Alert severity="error">{postCommentMutation.error.message}</Alert>
+          <Alert severity="error">Failed to post reply</Alert>
         )}
       </div>
     )

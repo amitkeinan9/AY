@@ -21,6 +21,7 @@ import { useNewPostForm } from "./useNewPostForm";
 import { LoadingButton } from "../loadingButton/LoadingButton";
 import { Alert } from "@mui/material";
 import { useEffect } from "react";
+import { useLoggedInUser } from "../../hooks/useLoggedInUser";
 
 interface NewPostModalProps {
   isOpen: boolean;
@@ -38,6 +39,7 @@ const PreviewContainer = styled("div")(previewContainerStyles);
 
 export const NewPostModal = (props: NewPostModalProps) => {
   const { isOpen, onClose } = props;
+  const { connectedUser, isLoading } = useLoggedInUser();
   const { selectImage, removeImage, preview, selectedImage } = useSelectImage();
   const {
     content,
@@ -68,8 +70,7 @@ export const NewPostModal = (props: NewPostModalProps) => {
 
         {didFail && <Alert severity="error">Failed to save post</Alert>}
         <ModalContent>
-          {/* TODO: Display real image */}
-          <ProfilePhoto src="https://encrypted-tbn0.gstatic.com/licensed-image?q=tbn:ANd9GcQi8RStSgyI6RaRYbUxcZTo4s5uzv8sUTTbgAoXEKaZsJz8hD0S4AEOKafJ-n1Y01Xo25FXlO_VgDDtoks" />
+          {!isLoading && <ProfilePhoto src={connectedUser.profilePic} />}
 
           <PostContainer>
             <TextField

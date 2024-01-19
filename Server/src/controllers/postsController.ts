@@ -4,6 +4,8 @@ import { createPost, getPostById, getPosts } from "../BL/posts/postsBL";
 import { PostDTO } from "../BL/posts/types";
 import { AuthRequest } from "../middlewares/validateAuth";
 import { BadRequestError } from "../errors/BadRequestError";
+import { addComment } from "../BL/posts/commentsBL";
+import { Comment } from "../models/postModel";
 
 export const getAllPosts = async (
   req: Request,
@@ -65,6 +67,28 @@ export const saveNewPost = async (
     );
 
     res.status(StatusCodes.CREATED).json(newPost);
+  } catch (e) {
+    next(e);
+  }
+};
+
+export const saveComment = async (
+  req: AuthRequest,
+  res: Response,
+  next: NextFunction
+) => {
+  try {
+    if (!req.body.content) {
+      throw new BadRequestError("Cannot post empty comment");
+    }
+
+    const newComment: Comment = await addComment(
+      req.params.id,
+      req.user._id,
+      req.body.content
+    );
+
+    res.status(StatusCodes.CREATED).json(newComment);
   } catch (e) {
     next(e);
   }

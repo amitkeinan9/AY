@@ -1,14 +1,16 @@
 import mongoose, { Model, Schema, Document } from "mongoose";
 import { IUser } from "./userModel";
 
+export interface Comment {
+  author: mongoose.Types.ObjectId | IUser;
+  content: string;
+}
+
 export interface IPost extends Document {
   author: IUser;
   content?: string;
   image?: string;
-  comments: {
-    author: IUser;
-    content: string;
-  }[];
+  comments: Comment[];
 }
 
 const postSchema: Schema = new mongoose.Schema<IPost>({

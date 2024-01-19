@@ -11,6 +11,7 @@ import { useLoggedInUser } from "../../hooks/useLoggedInUser";
 const Title = styled(Typography)(titleStyles);
 
 export const ProfilePage = () => {
+  const email = localStorage.getItem("connectedUserEmail");
   const {
     connectedUser,
     isLoading: isUserLoading,
