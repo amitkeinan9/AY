@@ -7,4 +7,5 @@ export const postListStyles = css({
   width: "40vw",
   borderRight: "1px solid rgba(239,243,244,1.00)",
   borderLeft: "1px solid rgba(239,243,244,1.00)",
+  overflow: "auto",
 });

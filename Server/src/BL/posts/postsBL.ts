@@ -32,7 +32,7 @@ export const getPosts = async (authorId?: string): Promise<PostDTO[]> => {
 export const getPostById = async (postId: string) => {
   const { __v, ...post }: IPost = (
     await Post.findById(postId).populate(
-      "author",
+      "author comments.author",
       "_id username fullName profilePic email"
     )
   ).toObject();

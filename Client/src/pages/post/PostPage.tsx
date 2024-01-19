@@ -52,6 +52,7 @@ export const PostPage = () => {
       </PostHeader>
       <Post
         content={post.content}
+        image={post.image}
         author={post.author}
         commentsCount={post.comments.length || state.commentsCount}
       />
