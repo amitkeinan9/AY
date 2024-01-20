@@ -1,7 +1,7 @@
 import { Request, Response } from "express";
 import { UserDTO } from "../BL/users/types";
 import { getUser } from "../BL/users/usersBL";
-import { AuthRequest } from "../common/auth_middleware";
+import { AuthRequest } from "../middlewares/validateAuth";
 import { StatusCodes } from "http-status-codes";
 
 export const getCurrentUserData = async (req: AuthRequest, res: Response) => {

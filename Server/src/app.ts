@@ -1,13 +1,17 @@
 import env from "dotenv";
 import express, { Express, Request, Response } from "express";
 import mongoose from "mongoose";
+import fsProm from "fs/promises";
+import fs from "fs";
+import path from "path";
 import bodyParser from "body-parser";
 import postsRouter from "./routers/postsRouter";
 import userRouter from "./routers/userRouter";
-import authMiddleware from "./common/auth_middleware";
+import validateAuth from "./middlewares/validateAuth";
 import morgan from "morgan";
 import { getAuthRouter } from "./routers/authRouter";
 import { OAuth2Client } from "google-auth-library";
+import { errorHandler } from "./middlewares/errorMiddleware";
 
 interface AppConfig {
   oAuthClientMock?: Partial<OAuth2Client>;
@@ -16,7 +20,7 @@ interface AppConfig {
 env.config();
 
 const initApp = (config: AppConfig = {}): Promise<Express> =>
-  new Promise<Express>((resolve) => {
+  new Promise<Express>(async (resolve) => {
     const db = mongoose.connection;
     const url = process.env.DB_URL;
 
@@ -27,21 +31,31 @@ const initApp = (config: AppConfig = {}): Promise<Express> =>
       throw new Error("DB_URL is not defined");
     }
 
+    if (!fs.existsSync(path.resolve("public", "images"))) {
+      await fsProm.mkdir(path.resolve("public", "images"), { recursive: true });
+      await fsProm.mkdir(path.resolve("public", "images", "profiles"));
+      await fsProm.mkdir(path.resolve("public", "images", "posts"));
+    }
+
     mongoose.connect(url).then(() => {
       const app = express();
 
-      app.use(bodyParser.json());
+      app.use(bodyParser.json({ limit: "30mb" }));
       app.use(bodyParser.urlencoded({ extended: true }));
 
       app.use(morgan("tiny"));
 
+      app.use("/public", express.static("public"));
+
       app.use("/auth", getAuthRouter(config?.oAuthClientMock));
 
-      app.use(authMiddleware);
+      app.use(validateAuth);
 
       app.use("/posts", postsRouter);
 
       app.use("/users", userRouter);
+
+      app.use(errorHandler);
 
       resolve(app);
     });
