@@ -50,7 +50,7 @@ export const ProfileInfo = ({ isLoading, isError, connectedUser }: Props) => {
                             <UserName>{connectedUser.username}</UserName>
                         </Box>
                     </ProfileData>
-                    <EditProfileButton onClick={() => navigate('/edit-profile')}>Edit profile</EditProfileButton>
+                    <EditProfileButton onClick={() => navigate('/edit-profile', {state: {connectedUser}})}>Edit profile</EditProfileButton>
                 </>
             )}
         </ProfileDataContainer>
