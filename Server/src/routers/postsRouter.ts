@@ -9,7 +9,6 @@ const router = express.Router();
 
 router.get("/", getAllPosts);
 router.post("/", saveNewPost);
-
 router.get("/own", getOwnPosts);
 
 export default router;
