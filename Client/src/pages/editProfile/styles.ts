@@ -23,7 +23,7 @@ export const backButtonStyles = css({
 export const formContainerStyles = css({
     display: 'flex',
     flexDirection: 'column',
-    gap: '1rem',
+    gap: '1.2rem',
     paddingLeft: '2rem',
     paddingTop: '1rem'
 })

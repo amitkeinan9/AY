@@ -9,3 +9,11 @@ export const getCurrentUserData = async (req: AuthRequest, res: Response) => {
 
     res.status(StatusCodes.OK).json(user);
 };
+
+export const editUser = async (req: AuthRequest, res: Response) => {
+    const email = req.body.email;
+    const password = req.body.password;
+    const username = req.body.username;
+    const fullName = req.body.fullName;
+    const profilePic = req.body.fullName;
+}
