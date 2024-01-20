@@ -1,7 +1,7 @@
 import { NextFunction, Request, Response } from "express";
 import { StatusCodes } from "http-status-codes";
 import { createPost, getPostById, getPosts } from "../BL/posts/postsBL";
-import { PostDTO } from "../BL/posts/types";
+import { CommentDTO, PostDTO } from "../BL/posts/types";
 import { AuthRequest } from "../middlewares/validateAuth";
 import { BadRequestError } from "../errors/BadRequestError";
 import { addComment } from "../BL/posts/commentsBL";
@@ -82,7 +82,7 @@ export const saveComment = async (
       throw new BadRequestError("Cannot post empty comment");
     }
 
-    const newComment: Comment = await addComment(
+    const newComment: CommentDTO = await addComment(
       req.params.id,
       req.user._id,
       req.body.content

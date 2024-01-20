@@ -8,3 +8,11 @@ export interface PostDTO {
   };
   commentsCount: number;
 }
+
+export interface CommentDTO {
+  content: string;
+  author: {
+    _id: string;
+    email: string;
+  };
+}
