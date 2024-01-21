@@ -36,8 +36,6 @@ export const PostPage = () => {
     },
   });
 
-  console.log(post);
-
   const goBack = () => {
     navigator(-1);
   };
