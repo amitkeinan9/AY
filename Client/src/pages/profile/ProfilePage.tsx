@@ -1,14 +1,14 @@
-import { Box } from "@mui/material";
+import { Typography } from "@mui/material";
 import { UserDTO } from "../../types/user";
 import styled from "@emotion/styled";
-import { profileContainerStyles } from "./styles";
 import { backendAxiosInstance } from "../../axios/backendInstance";
 import { PostDTO } from "../../types/post";
 import { ProfileInfo } from "./ProfileInfo/ProfileInfo";
-import { OwnPosts } from "./OwnPosts/OwnPosts";
 import { useQuery } from "@tanstack/react-query";
+import { PostList } from "../../components/postList/PostList";
+import { titleStyles } from "./styles";
 
-const ProfileContainer = styled(Box)(profileContainerStyles);
+const Title = styled(Typography)(titleStyles);
 
 export const ProfilePage = () => {
   const email = localStorage.getItem("connectedUserEmail");
@@ -32,17 +32,18 @@ export const ProfilePage = () => {
   });
 
   return (
-    <ProfileContainer>
+    <div>
       <ProfileInfo
         isLoading={isUserLoading}
         isError={isUserError}
         connectedUser={connectedUser}
       />
-      <OwnPosts
-        isLoading={isPostsLoading}
-        isError={isPostsError}
+      <Title variant="h6">Posts</Title>
+      <PostList
         posts={posts}
+        isError={isPostsError}
+        isLoading={isPostsLoading}
       />
-    </ProfileContainer>
+    </div>
   );
 };
