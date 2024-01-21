@@ -4,6 +4,7 @@ import mongoose from "mongoose";
 import { Express } from "express";
 import { posts, seedDB } from "../utils/seedDB";
 import { PostDTO } from "../../BL/posts/types";
+import { StatusCodes } from "http-status-codes";
 
 let app: Express;
 let accessToken: string;
@@ -94,6 +95,45 @@ describe("Get posts tests", () => {
         expect(author).toHaveProperty("email");
         expect(author).toHaveProperty("_id");
       });
+    });
+  });
+
+  describe("Get post by id", () => {
+    test("Should return post with existing id", async () => {
+      const existingId = posts[0]._id.toString();
+
+      const response = await request(app)
+        .get(`/posts/${existingId}`)
+        .set({
+          Authorization: "Bearer " + accessToken,
+        });
+
+      expect(response.status).toBe(StatusCodes.OK);
+      expect(response.body._id).toBe(existingId);
+    });
+
+    test("Should return 404 with invalid id", async () => {
+      const nonExistingId = "NOT_VALID_OBJECT_ID";
+
+      const response = await request(app)
+        .get(`/posts/${nonExistingId}`)
+        .set({
+          Authorization: "Bearer " + accessToken,
+        });
+
+      expect(response.status).toBe(StatusCodes.NOT_FOUND);
+    });
+
+    test("Should return 404 with non-existing id", async () => {
+      const nonExistingId = "659c000f9acd3fa6c7dc5d51";
+
+      const response = await request(app)
+        .get(`/posts/${nonExistingId}`)
+        .set({
+          Authorization: "Bearer " + accessToken,
+        });
+
+      expect(response.status).toBe(StatusCodes.NOT_FOUND);
     });
   });
 });

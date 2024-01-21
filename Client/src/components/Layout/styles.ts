@@ -7,3 +7,11 @@ export const layoutContainerStyles = css({
   height: "100%",
   gap: 0,
 });
+
+export const outletContainerStyles = css({
+  display: "flex",
+  flexDirection: "column",
+  width: "40vw",
+  borderRight: "1px solid rgba(239,243,244,1.00)",
+  borderLeft: "1px solid rgba(239,243,244,1.00)",
+});
