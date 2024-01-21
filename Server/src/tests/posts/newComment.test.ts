@@ -53,7 +53,7 @@ describe("Create post tests", () => {
         content: "amit",
       });
 
-    expect(response.status).toBe(StatusCodes.BAD_REQUEST);
+    expect(response.status).toBe(StatusCodes.NOT_FOUND);
   });
 
   test("Should not create if the post does not exists", async () => {

@@ -41,7 +41,7 @@ export const addComment = async (
     };
   } catch (e) {
     if (e instanceof mongoose.Error.CastError) {
-      throw new BadRequestError("Invalid post id");
+      throw new NotFoundError("Could not find requested post");
     }
 
     throw e;
