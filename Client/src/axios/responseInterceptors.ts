@@ -46,6 +46,6 @@ export const getErrorInterceptor = () => {
       }
     }
 
-    return error;
+    throw error;
   };
 };
