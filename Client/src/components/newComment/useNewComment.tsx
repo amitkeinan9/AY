@@ -34,5 +34,6 @@ export const useNewComment = () => {
     handleReplyChange,
     content,
     isCommentError: postCommentMutation.isError,
+    isCommentLoading: postCommentMutation.isPending,
   };
 };

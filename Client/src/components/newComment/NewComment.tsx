@@ -11,8 +11,13 @@ const CommentContainer = styled("div")(commentContainerStyles);
 
 export const NewComment = () => {
   const { connectedUser, isLoading } = useLoggedInUser();
-  const { content, handleReplyChange, postComment, isCommentError } =
-    useNewComment();
+  const {
+    content,
+    handleReplyChange,
+    postComment,
+    isCommentError,
+    isCommentLoading,
+  } = useNewComment();
 
   return (
     !isLoading && (
@@ -38,7 +43,7 @@ export const NewComment = () => {
           />
           <LoadingButton
             variant="contained"
-            disabled={!content}
+            disabled={!isCommentLoading}
             isLoading={false}
             onClick={postComment}
           >
