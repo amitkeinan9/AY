@@ -25,7 +25,7 @@ export const formContainerStyles = css({
     flexDirection: 'column',
     gap: '1.2rem',
     paddingLeft: '2rem',
-    paddingTop: '1rem'
+    paddingTop: '0.3rem'
 })
 
 export const fieldStyles = css({
@@ -39,5 +39,5 @@ export const fieldStyles = css({
 export const saveButtonStyles = css({
     fontSize: "1rem",
     width: '6rem',
-    marginTop: 30,
+    height: '2.5rem'
 });

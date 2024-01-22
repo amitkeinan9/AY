@@ -2,15 +2,16 @@ import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { useState } from "react";
 import { backendAxiosInstance } from "../../axios/backendInstance";
 import { EditUserDTO } from "../../types/user";
+import { useNavigate } from "react-router-dom";
 
 interface EditProfileFormProps {
-  email: string;
   profilePic?: Promise<string>;
-  onSaveSuccess: () => void;
 }
 
 export const useEditProfileForm = (props: EditProfileFormProps) => {
-  const { email, profilePic, onSaveSuccess } = props;
+  const { profilePic } = props;
+  const email = localStorage.getItem("connectedUserEmail");
+  const navigate = useNavigate();
 
   const queryClient = useQueryClient();
   const editProfileMutation = useMutation({
@@ -18,7 +19,7 @@ export const useEditProfileForm = (props: EditProfileFormProps) => {
       backendAxiosInstance.put<EditUserDTO>("/users/me", userData),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["myProfile"] });
-      onSaveSuccess();
+      navigate('/profile')
     },
   });
 
@@ -47,10 +48,10 @@ export const useEditProfileForm = (props: EditProfileFormProps) => {
     editProfileMutation.reset();
     editProfileMutation.mutate({
       email,
-      username,
-      fullName,
-      password,
-      profilePic: await profilePic,
+      username: username || undefined,
+      fullName: fullName || undefined,
+      password: password || undefined,
+      profilePic: (await profilePic) || undefined,
     });
   };
 
