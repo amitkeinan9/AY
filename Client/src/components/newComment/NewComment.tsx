@@ -43,8 +43,8 @@ export const NewComment = () => {
           />
           <LoadingButton
             variant="contained"
-            disabled={!isCommentLoading}
-            isLoading={false}
+            disabled={!content}
+            isLoading={isCommentLoading}
             onClick={postComment}
           >
             Reply
