@@ -3,16 +3,12 @@ import { Post } from "../../components/post/Post";
 import BackIcon from "@mui/icons-material/ArrowBackIosNewOutlined";
 import { useLocation, useNavigate, useParams } from "react-router-dom";
 import IconButton from "@mui/material/IconButton/IconButton";
-import {
-  backButtonStyles,
-  postContainerStyles,
-  postHeaderStyles,
-} from "./styles";
+import { backButtonStyles, postHeaderStyles } from "./styles";
 import { useQuery } from "@tanstack/react-query";
 import { backendAxiosInstance } from "../../axios/backendInstance";
 import { Comment, PostDTO, PostWithComments } from "../../types/post";
+import { NewComment } from "../../components/newComment/NewComment";
 
-const PostContainer = styled("div")(postContainerStyles);
 const PostHeader = styled("div")(postHeaderStyles);
 const BackButton = styled(IconButton)(backButtonStyles);
 
@@ -41,7 +37,7 @@ export const PostPage = () => {
   };
 
   return (
-    <PostContainer>
+    <div>
       <PostHeader>
         <BackButton onClick={goBack}>
           <BackIcon />
@@ -54,9 +50,14 @@ export const PostPage = () => {
         author={post.author}
         commentsCount={post.comments.length || state.commentsCount}
       />
+      <NewComment />
       {post.comments.map((comment: Comment) => (
-        <Post content={comment.content} author={comment.author} />
+        <Post
+          key={`${comment.content}-${comment.author._id}`}
+          content={comment.content}
+          author={comment.author}
+        />
       ))}
-    </PostContainer>
+    </div>
   );
 };

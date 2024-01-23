@@ -1,5 +1,4 @@
 import { Typography } from "@mui/material";
-import { UserDTO } from "../../types/user";
 import styled from "@emotion/styled";
 import { backendAxiosInstance } from "../../axios/backendInstance";
 import { PostDTO } from "../../types/post";
@@ -7,20 +6,17 @@ import { ProfileInfo } from "./ProfileInfo/ProfileInfo";
 import { useQuery } from "@tanstack/react-query";
 import { PostList } from "../../components/postList/PostList";
 import { titleStyles } from "./styles";
+import { useLoggedInUser } from "../../hooks/useLoggedInUser";
 
 const Title = styled(Typography)(titleStyles);
 
 export const ProfilePage = () => {
   const email = localStorage.getItem("connectedUserEmail");
-
   const {
-    data: connectedUser,
+    connectedUser,
     isLoading: isUserLoading,
     isError: isUserError,
-  } = useQuery<UserDTO>({
-    queryKey: ["users", email],
-    queryFn: async () => (await backendAxiosInstance.get(`/users/me`)).data,
-  });
+  } = useLoggedInUser();
 
   const {
     data: posts,
