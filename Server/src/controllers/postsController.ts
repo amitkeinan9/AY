@@ -1,6 +1,6 @@
 import { NextFunction, Request, Response } from "express";
 import { StatusCodes } from "http-status-codes";
-import { createPost, getPostById, getPosts } from "../BL/posts/postsBL";
+import { createPost, deletePostById, getPostById, getPosts } from "../BL/posts/postsBL";
 import { CommentDTO, PostDTO } from "../BL/posts/types";
 import { AuthRequest } from "../middlewares/validateAuth";
 import { BadRequestError } from "../errors/BadRequestError";
@@ -43,6 +43,20 @@ export const getPost = async (
 ) => {
   try {
     const post = await getPostById(req.params.id);
+
+    res.status(StatusCodes.OK).json(post);
+  } catch (e) {
+    next(e);
+  }
+};
+
+export const deletePost = async (
+  req: AuthRequest,
+  res: Response,
+  next: NextFunction
+) => {
+  try {
+    const post = await deletePostById(req.params.id);
 
     res.status(StatusCodes.OK).json(post);
   } catch (e) {

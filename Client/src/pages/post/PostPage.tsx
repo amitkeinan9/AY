@@ -1,22 +1,24 @@
-import { styled } from "@mui/system";
+import { Box, styled } from "@mui/system";
 import { Post } from "../../components/post/Post";
-import BackIcon from "@mui/icons-material/ArrowBackIosNewOutlined";
+import {ArrowBackIosNewOutlined as BackIcon, Edit as EditIcon, Delete as DeleteIcon} from "@mui/icons-material";
 import { useLocation, useNavigate, useParams } from "react-router-dom";
 import IconButton from "@mui/material/IconButton/IconButton";
-import { backButtonStyles, postHeaderStyles } from "./styles";
-import { useQuery } from "@tanstack/react-query";
+import { actionPostButtonStyles, actionPostContainerStyles, backButtonStyles, postHeaderStyles } from "./styles";
+import { useMutation, useQuery } from "@tanstack/react-query";
 import { backendAxiosInstance } from "../../axios/backendInstance";
 import { Comment, PostDTO, PostWithComments } from "../../types/post";
 import { NewComment } from "../../components/newComment/NewComment";
 
 const PostHeader = styled("div")(postHeaderStyles);
 const BackButton = styled(IconButton)(backButtonStyles);
+const ActionPostContainer = styled(Box)(actionPostContainerStyles)
+const ActionPostButton = styled(IconButton)(actionPostButtonStyles);
 
 export const PostPage = () => {
-  const navigator = useNavigate();
+  const navigate = useNavigate();
   const { state }: { state: Omit<PostDTO, "_id"> } = useLocation();
-
   const { postId } = useParams();
+  const email = localStorage.getItem("connectedUserEmail");
 
   const { data: post } = useQuery({
     queryKey: ["posts", postId],
@@ -32,17 +34,30 @@ export const PostPage = () => {
     },
   });
 
+  const deletePostMutation = useMutation({
+    mutationFn: () => backendAxiosInstance.delete(`/posts/${postId}`),
+    onSuccess: () => goBack()
+  });
+
   const goBack = () => {
-    navigator(-1);
+    navigate(-1);
   };
 
   return (
     <div>
       <PostHeader>
+        <Box>
         <BackButton onClick={goBack}>
           <BackIcon />
         </BackButton>
         <strong>Post</strong>
+        </Box>
+        {post.author.email === email &&
+          <ActionPostContainer>
+            <ActionPostButton color="primary" onClick={() => alert('edit')}><EditIcon/></ActionPostButton>
+            <ActionPostButton color="primary" onClick={() => deletePostMutation.mutate()}><DeleteIcon/></ActionPostButton>
+          </ActionPostContainer>
+        }
       </PostHeader>
       <Post
         content={post.content}

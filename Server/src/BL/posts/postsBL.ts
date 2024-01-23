@@ -52,6 +52,22 @@ export const getPostById = async (postId: string) => {
   }
 };
 
+export const deletePostById = async (postId: string) => {
+  try {
+    const deletedPost = await Post.findByIdAndDelete(postId);
+
+    if (!deletedPost) {
+      throw new NotFoundError("Couldn't find requested post");
+    }
+  } catch (e) {
+    if (e instanceof mongoose.Error.CastError) {
+      throw new NotFoundError("Couldn't find requested post");
+    }
+
+    throw e;
+  }
+};
+
 export const createPost = async (
   authorId: string,
   content: string,
