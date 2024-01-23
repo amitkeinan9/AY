@@ -1,4 +1,5 @@
 import { css } from "@emotion/react";
+import { purple } from "@mui/material/colors";
 
 export const editProfileContainerStyles = css({
     display: "flex",
@@ -35,6 +36,12 @@ export const fieldStyles = css({
         fontSize: '0.85rem'
     }
 })
+
+export const editImageContainer = css ({ 
+    position: 'absolute', 
+    top: '3.8rem', 
+    left: '3.8rem' 
+});
 
 export const saveButtonStyles = css({
     fontSize: "1rem",

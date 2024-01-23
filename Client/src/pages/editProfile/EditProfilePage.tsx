@@ -1,20 +1,20 @@
 import styled from "@emotion/styled";
-import { Alert, Avatar, Box, Button, IconButton, TextField, useTheme } from "@mui/material";
-import { backButtonStyles, editProfileContainerStyles, editProfileHeaderStyles, fieldStyles, formContainerStyles, saveButtonStyles } from "./styles";
+import { Alert, Avatar, Box, IconButton, TextField, useTheme } from "@mui/material";
+import { backButtonStyles, editButtonStyles, editProfileContainerStyles, editProfileHeaderStyles, fieldStyles, formContainerStyles, saveButtonStyles } from "./styles";
 import BackIcon from "@mui/icons-material/ArrowBackIosNewOutlined";
 import EditIcon from '@mui/icons-material/Edit';
 import { useLocation, useNavigate } from "react-router-dom";
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 import { useSelectImage } from "../../hooks/useSelectImage";
 import { useEditProfileForm } from "./useEditProfileForm";
-import { ImageOutlined } from "@mui/icons-material";
 import { LoadingButton } from "../../components/loadingButton/LoadingButton";
 
 const EditProfileContainer = styled(Box)(editProfileContainerStyles);
 const EditProfileHeader = styled(Box)(editProfileHeaderStyles);
 const BackButton = styled(IconButton)(backButtonStyles);
 const FormContainer = styled(Box)(formContainerStyles);
-const Field = styled(TextField)(fieldStyles)
+const Field = styled(TextField)(fieldStyles);
+const EditImageContainer = styled('div')(editImageContainer);
 const SaveButton = styled(LoadingButton)(saveButtonStyles);
 
 export const EditProfilePage = () => {
@@ -55,7 +55,7 @@ export const EditProfilePage = () => {
             <FormContainer>
                 <div style={{ position: 'relative' }}>
                     <Avatar src={preview || connectedUser.profilePic} alt="User Avatar" sx={{ width: '5.5rem', height: "5.5rem" }} />
-                    <div style={{ position: 'absolute', top: '3.8rem', left: '3.8rem' }}>
+                    <EditImageContainer>
                         <IconButton color="primary" style={{ width: '1.7rem', height: "1.7rem", borderRadius: '50%', background: theme.palette.primary.main }}
                             component="label"
                             htmlFor="imageUpload"
@@ -69,7 +69,7 @@ export const EditProfilePage = () => {
                                 accept="image/png, image/gif, image/jpeg"
                             />
                         </IconButton>
-                    </div>
+                    </EditImageContainer>
                 </div>
                 <Field
                     label="Email"
