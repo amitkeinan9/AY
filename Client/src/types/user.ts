@@ -7,7 +7,6 @@ export interface UserDTO {
 }
 
 export interface EditUserDTO {
-    email: string;
     password?: string;
     username?: string;
     fullName?: string;

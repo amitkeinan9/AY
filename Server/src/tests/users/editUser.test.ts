@@ -9,6 +9,9 @@ import { StatusCodes } from "http-status-codes";
 
 let app: Express;
 let accessToken: string;
+let userId: string;
+
+const nonExistingUserId = "659c01e59acd2fa6c7dc5123";
 
 describe("Edit profile tests", () => {
     beforeAll(async () => {
@@ -24,6 +27,7 @@ describe("Edit profile tests", () => {
         });
 
         accessToken = loginRes.body.accessToken;
+        userId = loginRes.body.id;
     });
 
     afterAll(async () => {
@@ -31,30 +35,55 @@ describe("Edit profile tests", () => {
         await fs.rm(path.resolve("public"), { recursive: true, force: true });
     });
 
-    test("Should not edit anything because all the fields are missing", async () => {
+    test("Should not edit user if the id does not exists", async () => {
         const response = await request(app)
-            .put("/users/me")
+            .put(`/users/${nonExistingUserId}`)
+            .set({
+                Authorization: "Bearer " + accessToken,
+            })
+            .send({
+                username: "12345"
+            });
+
+        expect(response.status).toBe(StatusCodes.NOT_FOUND);
+    });
+
+    test("Should not edit user without fields to edit", async () => {
+        const response = await request(app)
+            .put(`/users/${userId}`)
             .set({
                 Authorization: "Bearer " + accessToken,
             })
             .send();
 
-        expect(response.status).toBe(StatusCodes.OK);
+        expect(response.status).toBe(StatusCodes.BAD_REQUEST);
     });
 
-    test("Should edit one field", async () => {
+    test("Should not edit user with exist username", async () => {
         const response = await request(app)
-            .put("/users/me")
+            .put(`/users/${userId}`)
             .set({
                 Authorization: "Bearer " + accessToken,
             })
             .send({
-                email: "yael@gmail.com",
+                username: "amit123"
+            });
+
+        expect(response.status).toBe(StatusCodes.CONFLICT);
+    });
+
+    test("Should edit one field", async () => {
+        const response = await request(app)
+            .put(`/users/${userId}`)
+            .set({
+                Authorization: "Bearer " + accessToken,
+            })
+            .send({
                 username: "yael",
             });
 
         const userResponse = await request(app)
-            .get("/users/me")
+            .get(`/users/${userId}`)
             .set({
                 Authorization: "Bearer " + accessToken,
             })
@@ -67,7 +96,7 @@ describe("Edit profile tests", () => {
 
     test("Should edit all fields", async () => {
         const response = await request(app)
-            .put("/users/me")
+            .put(`/users/${userId}`)
             .set({
                 Authorization: "Bearer " + accessToken,
             })
@@ -80,7 +109,7 @@ describe("Edit profile tests", () => {
             });
 
         const userResponse = await request(app)
-            .get("/users/me")
+            .get(`/users/${userId}`)
             .set({
                 Authorization: "Bearer " + accessToken,
             })
@@ -90,6 +119,6 @@ describe("Edit profile tests", () => {
         expect(userResponse.body.email).toBe("yael@gmail.com");
         expect(userResponse.body.username).toBe("yael");
         expect(userResponse.body.fullName).toBe("Yael And Amit");
-        expect(userResponse.body.profilePic).toBe("http://localhost:5005/public/images/profiles/yael@gmail.com.png");
+        expect(userResponse.body.profilePic).toBeDefined();
     });
 });

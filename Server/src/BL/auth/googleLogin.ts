@@ -1,5 +1,5 @@
 import { OAuth2Client } from "google-auth-library";
-import { TokenPair } from "./types";
+import { TokenPairWithId } from "./types";
 import User from "../../models/userModel";
 import { BadRequestError } from "../../errors/BadRequestError";
 import { createTokens, updateRefreshToken } from "./tokens";
@@ -7,7 +7,7 @@ import { createTokens, updateRefreshToken } from "./tokens";
 export const loginWithGoogle = async (
   oauth2Client: OAuth2Client,
   code: string
-): Promise<TokenPair> => {
+): Promise<TokenPairWithId> => {
   const token = await oauth2Client.getToken(code);
   const loginTicket = await oauth2Client.verifyIdToken({
     idToken: token.tokens.id_token ?? "",
@@ -31,5 +31,5 @@ export const loginWithGoogle = async (
   const tokens = await createTokens(user);
   await updateRefreshToken(user, tokens.refreshToken);
 
-  return tokens;
+  return { id: user._id, ...tokens };
 };

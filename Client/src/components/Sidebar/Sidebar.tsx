@@ -9,7 +9,6 @@ import { useState } from "react";
 import styled from "@emotion/styled";
 import { useLogout } from "./useLogout";
 import { NavigationLink } from "./NavigationLink";
-import { useLocation } from "react-router-dom";
 import { NewPostModal } from "../newPostModal/NewPostModal";
 
 const ButtonsContainer = styled(Box)(buttonsContainerStyles);
@@ -19,7 +18,6 @@ const SidebarContainer = styled(Box)(sidebarContainerStyles);
 export const Sidebar = () => {
   const [error, setError] = useState<string>("");
   const { handleLogout } = useLogout(setError);
-  const location = useLocation();
   const [isNewPostOpen, setIsNewPostOpen] = useState<boolean>(false);
 
   return (
@@ -27,12 +25,12 @@ export const Sidebar = () => {
       <SidebarContainer>
         <ButtonsContainer>
           <img src="src/assets/logo.svg" width="50" />
-          <NavigationLink text="Home" path="/home" Icon={HomeIcon} isActive={location.pathname === '/home'} />
+          <NavigationLink text="Home" path="/home" Icon={HomeIcon}  />
           <NavigationLink
             text="Profile"
             path="/profile"
             Icon={PersonIcon}
-            isActive={['/profile', '/edit-profile'].includes(location.pathname)} />
+          />
         </ButtonsContainer>
         <ButtonsContainer>
           <ActiveButton

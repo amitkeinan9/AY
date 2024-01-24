@@ -1,5 +1,9 @@
 import { css } from "@emotion/react";
-import { purple } from "@mui/material/colors";
+import { deepPurple } from "@mui/material/colors";
+
+export const profilePicContainerStyles = css({
+    position: 'relative'
+});
 
 export const editProfileContainerStyles = css({
     display: "flex",
@@ -37,6 +41,25 @@ export const fieldStyles = css({
     }
 })
 
+export const profilePicStyles = css({
+    width: "5.5rem", 
+    height: "5.5rem"
+});
+
+export const editProfilePicIconButtonStyles = css({
+    width: '1.7rem', 
+    height: "1.7rem", 
+    borderRadius: '50%', 
+    backgroundColor: deepPurple[600],
+    "&:hover": {
+        backgroundColor: deepPurple[500]
+      },
+})
+
+export const editProfilePicIconStyles = css({
+    color: 'white', 
+    fontSize: '1rem'
+})
 export const editImageContainer = css ({ 
     position: 'absolute', 
     top: '3.8rem', 

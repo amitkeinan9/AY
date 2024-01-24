@@ -11,7 +11,7 @@ import { useLoggedInUser } from "../../hooks/useLoggedInUser";
 const Title = styled(Typography)(titleStyles);
 
 export const ProfilePage = () => {
-  const email = localStorage.getItem("connectedUserEmail");
+  const userId = localStorage.getItem("connectedUserId");
   const {
     connectedUser,
     isLoading: isUserLoading,
@@ -23,7 +23,7 @@ export const ProfilePage = () => {
     isLoading: isPostsLoading,
     isError: isPostsError,
   } = useQuery<PostDTO[]>({
-    queryKey: ["myPosts", email],
+    queryKey: ["myPosts", userId],
     queryFn: async () => (await backendAxiosInstance.get("/posts/own")).data,
   });
 

@@ -1,6 +1,18 @@
 import styled from "@emotion/styled";
-import { Alert, Avatar, Box, IconButton, TextField, useTheme } from "@mui/material";
-import { backButtonStyles, editButtonStyles, editProfileContainerStyles, editProfileHeaderStyles, fieldStyles, formContainerStyles, saveButtonStyles } from "./styles";
+import { Alert, Avatar, Box, IconButton, TextField } from "@mui/material";
+import {
+    backButtonStyles,
+    editImageContainer,
+    editProfileContainerStyles,
+    editProfileHeaderStyles,
+    editProfilePicIconButtonStyles,
+    editProfilePicIconStyles,
+    fieldStyles,
+    formContainerStyles,
+    profilePicContainerStyles,
+    profilePicStyles,
+    saveButtonStyles
+} from "./styles";
 import BackIcon from "@mui/icons-material/ArrowBackIosNewOutlined";
 import EditIcon from '@mui/icons-material/Edit';
 import { useLocation, useNavigate } from "react-router-dom";
@@ -9,20 +21,26 @@ import { useSelectImage } from "../../hooks/useSelectImage";
 import { useEditProfileForm } from "./useEditProfileForm";
 import { LoadingButton } from "../../components/loadingButton/LoadingButton";
 
+const ProfilePicContainer = styled(Box)(profilePicContainerStyles);
 const EditProfileContainer = styled(Box)(editProfileContainerStyles);
 const EditProfileHeader = styled(Box)(editProfileHeaderStyles);
 const BackButton = styled(IconButton)(backButtonStyles);
 const FormContainer = styled(Box)(formContainerStyles);
 const Field = styled(TextField)(fieldStyles);
+const ProfilePic = styled(Avatar)(profilePicStyles);
+const EditProfilePicIconButton = styled(IconButton)<{
+    component?: React.ElementType;
+    htmlFor?: string;
+}>(editProfilePicIconButtonStyles)
+const EditProfilePicIcon = styled(EditIcon)(editProfilePicIconStyles)
 const EditImageContainer = styled('div')(editImageContainer);
 const SaveButton = styled(LoadingButton)(saveButtonStyles);
 
 export const EditProfilePage = () => {
-    const location = useLocation() 
-    const theme = useTheme();
+    const location = useLocation()
     const navigate = useNavigate();
-    const {connectedUser} = location.state;
-    
+    const { connectedUser } = location.state;
+
     const { selectImage, preview, selectedImage } = useSelectImage();
     const {
         username,
@@ -35,14 +53,15 @@ export const EditProfilePage = () => {
         editProfile,
         resetForm,
         isPending,
-        didFail
+        didFail,
+        errorMessage,
     } = useEditProfileForm({
-      profilePic: selectedImage,
+        profilePic: selectedImage,
     });
 
     useEffect(() => {
         resetForm();
-      }, []);
+    }, []);
 
     return (
         <EditProfileContainer>
@@ -53,14 +72,11 @@ export const EditProfilePage = () => {
                 <strong>Edit profile</strong>
             </EditProfileHeader>
             <FormContainer>
-                <div style={{ position: 'relative' }}>
-                    <Avatar src={preview || connectedUser.profilePic} alt="User Avatar" sx={{ width: '5.5rem', height: "5.5rem" }} />
+                <ProfilePicContainer>
+                    <ProfilePic src={preview || connectedUser.profilePic} alt="User Avatar" />
                     <EditImageContainer>
-                        <IconButton color="primary" style={{ width: '1.7rem', height: "1.7rem", borderRadius: '50%', background: theme.palette.primary.main }}
-                            component="label"
-                            htmlFor="imageUpload"
-                        >
-                            <EditIcon style={{ color: 'white', fontSize: '1rem' }} />
+                        <EditProfilePicIconButton component="label" htmlFor="imageUpload">
+                            <EditProfilePicIcon />
                             <input
                                 id="imageUpload"
                                 type="file"
@@ -68,9 +84,9 @@ export const EditProfilePage = () => {
                                 onChange={selectImage}
                                 accept="image/png, image/gif, image/jpeg"
                             />
-                        </IconButton>
+                        </EditProfilePicIconButton>
                     </EditImageContainer>
-                </div>
+                </ProfilePicContainer>
                 <Field
                     label="Email"
                     placeholder={connectedUser.email}
@@ -108,7 +124,7 @@ export const EditProfilePage = () => {
                 >
                     Save
                 </SaveButton>
-                {didFail && <Alert severity="error" sx={{width: '12rem'}}>Failed to edit prodile</Alert>}
+                {didFail && <Alert severity="error" sx={{ width: '12rem' }}>{errorMessage || "Failed to edit prodile"}</Alert>}
             </FormContainer>
         </EditProfileContainer>
     );

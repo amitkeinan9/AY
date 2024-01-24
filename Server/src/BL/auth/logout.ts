@@ -3,12 +3,9 @@ import { UnauthorizedError } from "../../errors/UnauthorizedError";
 import User, { IUser } from "../../models/userModel";
 import { BadRequestError } from "../../errors/BadRequestError";
 import {
-  createTokens,
   resetRefreshTokens,
   revokeRefreshToken,
-  updateRefreshToken,
 } from "./tokens";
-import { TokenPair } from "./types";
 import { jwtVerify } from "../../utils/jwtPromises";
 
 export const logoutUser = async (refreshToken: string): Promise<void> => {

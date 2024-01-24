@@ -1,8 +1,9 @@
-import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { useMutation } from "@tanstack/react-query";
 import { useState } from "react";
 import { backendAxiosInstance } from "../../axios/backendInstance";
 import { EditUserDTO } from "../../types/user";
 import { useNavigate } from "react-router-dom";
+import axios, { HttpStatusCode } from "axios";
 
 interface EditProfileFormProps {
   profilePic?: Promise<string>;
@@ -10,22 +11,19 @@ interface EditProfileFormProps {
 
 export const useEditProfileForm = (props: EditProfileFormProps) => {
   const { profilePic } = props;
-  const email = localStorage.getItem("connectedUserEmail");
+  const userId = localStorage.getItem("connectedUserId");
   const navigate = useNavigate();
 
-  const queryClient = useQueryClient();
   const editProfileMutation = useMutation({
     mutationFn: (userData: EditUserDTO) =>
-      backendAxiosInstance.put<EditUserDTO>("/users/me", userData),
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["myProfile"] });
-      navigate('/profile')
-    },
+      backendAxiosInstance.put<EditUserDTO>(`/users/${userId}`, userData),
+    onSuccess: () => navigate('/profile')
   });
 
   const [username, setUsername] = useState<string>();
   const [fullName, setFullName] = useState<string>();
   const [password, setPassword] = useState<string>();
+  const [errorMessage, setErrorMessage] = useState<string>();
 
   const isFormValid = !!(username || fullName || password || profilePic);
 
@@ -46,19 +44,31 @@ export const useEditProfileForm = (props: EditProfileFormProps) => {
 
   const editProfile = async () => {
     editProfileMutation.reset();
-    editProfileMutation.mutate({
-      email,
-      username: username || undefined,
-      fullName: fullName || undefined,
-      password: password || undefined,
-      profilePic: (await profilePic) || undefined,
-    });
-  };
+    try {
+      await editProfileMutation.mutateAsync({
+        username: username || undefined,
+        fullName: fullName || undefined,
+        password: password || undefined,
+        profilePic: (await profilePic) || undefined,
+      });
+    } catch (error) {
+      if (axios.isAxiosError(error)) {
+        if (error.response?.status === HttpStatusCode.Conflict) {
+          setErrorMessage("username already exist")
+        } else {
+          setErrorMessage("")
+        }
+      }
+
+      throw error;
+    }
+  }
 
   const resetForm = () => {
     setUsername("");
     setFullName("");
     setPassword("");
+    setErrorMessage("")
     editProfileMutation.reset();
   };
 
@@ -74,5 +84,6 @@ export const useEditProfileForm = (props: EditProfileFormProps) => {
     resetForm,
     isPending: editProfileMutation.isPending,
     didFail: editProfileMutation.isError,
+    errorMessage
   };
 };

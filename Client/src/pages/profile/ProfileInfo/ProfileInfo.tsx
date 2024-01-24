@@ -47,10 +47,10 @@ export const ProfileInfo = ({ isLoading, isError, connectedUser }: Props) => {
                             <FullName>
                                 {connectedUser.fullName.split(' ').map((word: string) => word.charAt(0).toUpperCase() + word.slice(1)).join(' ')}
                             </FullName>
-                            <UserName>{connectedUser.username}</UserName>
+                            <UserName>@{connectedUser.username}</UserName>
                         </Box>
                     </ProfileData>
-                    <EditProfileButton onClick={() => navigate('/edit-profile', {state: {connectedUser}})}>Edit profile</EditProfileButton>
+                    <EditProfileButton onClick={() => navigate('/profile/edit', { state: { connectedUser } })}>Edit profile</EditProfileButton>
                 </>
             )}
         </ProfileDataContainer>

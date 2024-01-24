@@ -17,6 +17,7 @@ export const useNewPostForm = (props: NewPostFormProps) => {
       backendAxiosInstance.post<PostDTO>("/posts", newPost),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["posts"] });
+      queryClient.invalidateQueries({ queryKey: ["myPosts"] });
       onSaveSuccess();
     },
   });
