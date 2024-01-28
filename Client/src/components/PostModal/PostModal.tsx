@@ -17,14 +17,24 @@ import {
   removeImageButtonStyles,
 } from "./styles";
 import { useSelectImage } from "../../hooks/useSelectImage";
-import { useNewPostForm } from "./useNewPostForm";
+import { usePostForm } from "./usePostForm";
 import { LoadingButton } from "../loadingButton/LoadingButton";
 import { Alert } from "@mui/material";
 import { useEffect } from "react";
 import { useLoggedInUser } from "../../hooks/useLoggedInUser";
+import { UseMutationResult } from "@tanstack/react-query";
+import { AxiosResponse } from "axios";
+import { PostDTO } from "../../types/post";
 
-interface NewPostModalProps {
+interface PostModalProps {
   isOpen: boolean;
+  isNewPost: boolean;
+  currContent?: string;
+  currImage?: string;
+  actionPostMutation: UseMutationResult<AxiosResponse<PostDTO, unknown>, Error, {
+    content: string;
+    image?: string;
+  }, unknown>;
   onClose: () => void;
 }
 
@@ -37,26 +47,35 @@ const RemoveImageButton = styled(IconButton)(removeImageButtonStyles);
 const PostContainer = styled("div")(postContainerStyles);
 const PreviewContainer = styled("div")(previewContainerStyles);
 
-export const NewPostModal = (props: NewPostModalProps) => {
-  const { isOpen, onClose } = props;
+export const PostModal = (props: PostModalProps) => {
+  const { isOpen, isNewPost, currImage, currContent, actionPostMutation, onClose } = props;
   const { connectedUser, isLoading } = useLoggedInUser();
-  const { selectImage, removeImage, preview, selectedImage } = useSelectImage();
+  const { selectImage, removeImage, preview, setPreview, selectedImage } = useSelectImage();
   const {
     content,
+    setContent,
     handleContentChange,
     isFormValid,
-    createPost,
+    savePost,
     isPending,
     didFail,
     resetForm,
-  } = useNewPostForm({
+  } = usePostForm({
     image: selectedImage,
-    onSaveSuccess: onClose,
+    actionPostMutation,
   });
 
   useEffect(() => {
     removeImage();
     resetForm();
+
+    if (currContent) {
+      setContent(currContent);
+    }
+
+    if (currImage) {
+      setPreview(currImage);
+    }
   }, [isOpen]);
 
   return (
@@ -89,7 +108,7 @@ export const NewPostModal = (props: NewPostModalProps) => {
               }}
             ></TextField>
 
-            {preview && (
+            {(preview) && (
               <PreviewContainer>
                 <RemoveImageButton onClick={removeImage} size="small">
                   <Close htmlColor="white" />
@@ -120,10 +139,10 @@ export const NewPostModal = (props: NewPostModalProps) => {
           <LoadingButton
             variant="contained"
             disabled={!isFormValid}
-            onClick={createPost}
+            onClick={savePost}
             isLoading={isPending}
           >
-            Post
+            {isNewPost ? 'Post' : 'Save'}
           </LoadingButton>
         </ModalFooter>
       </ModalBody>

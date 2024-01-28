@@ -44,11 +44,13 @@ export const useSelectImage = () => {
 
   const removeImage = () => {
     setSelectedImage(undefined);
+    setPreview(undefined);
   };
 
   return {
     selectedImage: selectedImage ? readFileAsBase64(selectedImage) : undefined,
     preview,
+    setPreview,
     selectImage,
     removeImage,
   };

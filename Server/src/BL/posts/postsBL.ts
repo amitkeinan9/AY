@@ -87,17 +87,12 @@ export const editPostById = async (authorId: string, postId: string, content: st
       throw new ForbiddenError("Couldn't edit a post of another connected user");
     }
 
-    if (imageBase64) {
-      existPost.image = await saveImage(
-        imageBase64,
-        postId,
-        ImageType.POST
-      );
-    }
-
-    if (content) {
-      existPost.content = content;
-    }
+    existPost.content = content;
+    existPost.image = !imageBase64 ? undefined : await saveImage(
+      imageBase64,
+      postId,
+      ImageType.POST
+    );
 
     const updatedPost = await existPost.save();
 
