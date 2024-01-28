@@ -5,3 +5,11 @@ export interface UserDTO {
     fullName: string;
     profilePic?: string;
 }
+
+export interface EditUserDTO {
+    email: string;
+    password?: string;
+    username?: string;
+    fullName?: string;
+    profilePic?: string;
+}

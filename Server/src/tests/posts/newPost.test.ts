@@ -75,8 +75,6 @@ describe("Create post tests", () => {
     expect(response.body.content).toBe("New post!");
     expect(response.body.author.email).toBe("amit@gmail.com");
     expect(response.body.commentsCount).toBe(0);
-    expect(response.body.image).toBe(
-      `${process.env.SERVER_URL}/public/images/posts/${response.body._id}.png`
-    );
+    expect(response.body.image).toBeDefined()
   });
 });

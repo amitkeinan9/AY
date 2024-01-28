@@ -1,7 +1,9 @@
 import express from "express";
-import { getCurrentUserData } from "../controllers/userController";
+import { editUser, getCurrentUserData } from "../controllers/userController";
 
 const router = express.Router();
 
-router.get("/me", getCurrentUserData);
+router.get("/:id", getCurrentUserData);
+router.put("/:id", editUser);
+
 export default router;

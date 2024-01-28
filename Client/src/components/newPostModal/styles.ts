@@ -30,6 +30,9 @@ export const modalContentStyles = css({
     maxHeight: "calc(100vh - 130px)",
   },
   overflow: "scroll",
+  "&::-webkit-scrollbar": {
+    width: "2rem"
+  },
 });
 
 export const modalFooterlStyles = css({

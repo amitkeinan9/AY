@@ -50,7 +50,7 @@ export const Post = (props: PostProps) => {
       <div>
         <PostHeader>
           <strong>{author.fullName}</strong>{" "}
-          <Username>{author.username}</Username>
+          <Username>@{author.username}</Username>
         </PostHeader>
 
         <div>{content}</div>

@@ -12,8 +12,15 @@ export const users = [
     fullName: 'Amit Keinan'
   },
   {
-    _id: new mongoose.Types.ObjectId("6599900ea4c73eb4803a5624"),
+    _id: new mongoose.Types.ObjectId("6599900ea4c73eb4803a5625"),
     email: "yael@gmail.com",
+    password: "$2b$10$0XoYZ7WOggkrsW/6rQjLQuOrgUQZHTjndv1J/I14e3hKUyfbck/nm",  // 123
+    username: 'yael1',
+    fullName: 'Yael Buchris'
+  },
+  {
+    _id: new mongoose.Types.ObjectId("6599900ea4c73eb4803a5624"),
+    email: "yaelili70@gmail.com",
     isGoogleUser: true,
     username: 'yael111',
     fullName: 'Yael Buchris'
