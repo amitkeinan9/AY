@@ -11,7 +11,7 @@ let app: Express;
 let accessToken: string;
 let userId: string;
 
-const nonExistingUserId = "659c01e59acd2fa6c7dc5123";
+const existingUserId = "6596cd59a05df9782d137cd8";
 
 describe("Edit profile tests", () => {
     beforeAll(async () => {
@@ -35,19 +35,6 @@ describe("Edit profile tests", () => {
         await fs.rm(path.resolve("public"), { recursive: true, force: true });
     });
 
-    test("Should not edit user if the id does not exists", async () => {
-        const response = await request(app)
-            .put(`/users/${nonExistingUserId}`)
-            .set({
-                Authorization: "Bearer " + accessToken,
-            })
-            .send({
-                username: "12345"
-            });
-
-        expect(response.status).toBe(StatusCodes.NOT_FOUND);
-    });
-
     test("Should not edit user without fields to edit", async () => {
         const response = await request(app)
             .put(`/users/${userId}`)
@@ -57,6 +44,19 @@ describe("Edit profile tests", () => {
             .send();
 
         expect(response.status).toBe(StatusCodes.BAD_REQUEST);
+    });
+
+    test("Should not edit a different user from the connected user", async () => {
+        const response = await request(app)
+            .put(`/users/${existingUserId}`)
+            .set({
+                Authorization: "Bearer " + accessToken,
+            })
+            .send({
+                username: "yaelBuchris123"
+            });
+
+        expect(response.status).toBe(StatusCodes.FORBIDDEN);
     });
 
     test("Should not edit user with exist username", async () => {

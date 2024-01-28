@@ -3,8 +3,6 @@ export interface TokenPair {
   refreshToken: string;
 }
 
-export interface TokenPairWithId {
+export interface TokenPairWithId extends TokenPair {
   id: string;
-  accessToken: string;
-  refreshToken: string;
 }

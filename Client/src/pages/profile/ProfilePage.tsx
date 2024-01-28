@@ -23,7 +23,7 @@ export const ProfilePage = () => {
     isLoading: isPostsLoading,
     isError: isPostsError,
   } = useQuery<PostDTO[]>({
-    queryKey: ["myPosts", userId],
+    queryKey: ["posts", userId],
     queryFn: async () => (await backendAxiosInstance.get("/posts/own")).data,
   });
 

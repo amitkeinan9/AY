@@ -25,10 +25,9 @@ export const getUser = async (id: string): Promise<UserDTO> => {
 };
 
 export const editUser = async (id: string, user: EditUserDTO) => {
-
     try {
         if (user.username) {
-            const existUser = await await User.findOne({
+            const existUser = await User.findOne({
                 _id: { $ne: id },
                 username: user.username
             });

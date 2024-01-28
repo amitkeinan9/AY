@@ -4,6 +4,7 @@ import { getUser, editUser as editCurrentUser } from "../BL/users/usersBL";
 import { AuthRequest } from "../middlewares/validateAuth";
 import { StatusCodes } from "http-status-codes";
 import { BadRequestError } from "../errors/BadRequestError";
+import { ForbiddenError } from "../errors/ForbiddenError";
 
 export const getCurrentUserData = async (req: AuthRequest, res: Response, next: NextFunction) => {
     try {
@@ -18,7 +19,12 @@ export const getCurrentUserData = async (req: AuthRequest, res: Response, next: 
 export const editUser = async (req: AuthRequest, res: Response, next: NextFunction) => {
     try {
         const userId = req.params.id;
+        const connectedUserId = req.user._id;
         const user = req.body as EditUserDTO;
+
+        if (userId !== connectedUserId) {
+            throw new ForbiddenError("Cannot edit another user")
+        }
 
         if (!user.fullName && !user.password && !user.profilePic && !user.username) {
             throw new BadRequestError("Cannot edit empty user");
