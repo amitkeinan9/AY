@@ -11,6 +11,7 @@ import { PostDTO } from "./types";
 import { ImageType, saveImage } from "../common/images";
 import { parsePostToDTO } from "./postsParser";
 import { NotFoundError } from "../../errors/NotFoundError";
+import { ForbiddenError } from "../../errors/ForbiddenError";
 
 export const getPosts = async (authorId?: string): Promise<PostDTO[]> => {
   const aggregationStages: PipelineStage[] = [
@@ -52,13 +53,55 @@ export const getPostById = async (postId: string) => {
   }
 };
 
-export const deletePostById = async (postId: string) => {
+export const deletePostById = async (authorId: string, postId: string) => {
   try {
-    const deletedPost = await Post.findByIdAndDelete(postId);
+    const existPost = await Post.findById(postId).populate("author");
 
-    if (!deletedPost) {
+    if (!existPost) {
       throw new NotFoundError("Couldn't find requested post");
     }
+
+    if (existPost.author.id !== authorId) {
+      throw new ForbiddenError("Couldn't delete a post of another connected user");
+    }
+
+    await Post.findByIdAndDelete(postId);
+  } catch (e) {
+    if (e instanceof mongoose.Error.CastError) {
+      throw new NotFoundError("Couldn't find requested post");
+    }
+
+    throw e;
+  }
+};
+
+export const editPostById = async (authorId: string, postId: string, content: string, imageBase64?: string): Promise<PostDTO> => {
+  try {
+    const existPost = await Post.findById(postId).populate("author");
+
+    if (!existPost) {
+      throw new NotFoundError("Couldn't find requested post");
+    }
+
+    if (existPost.author.id !== authorId) {
+      throw new ForbiddenError("Couldn't edit a post of another connected user");
+    }
+
+    if (imageBase64) {
+      existPost.image = await saveImage(
+        imageBase64,
+        postId,
+        ImageType.POST
+      );
+    }
+
+    if (content) {
+      existPost.content = content;
+    }
+
+    const updatedPost = await existPost.save();
+
+    return parsePostToDTO(updatedPost);
   } catch (e) {
     if (e instanceof mongoose.Error.CastError) {
       throw new NotFoundError("Couldn't find requested post");
