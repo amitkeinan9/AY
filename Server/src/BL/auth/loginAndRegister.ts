@@ -3,13 +3,13 @@ import { ConflictError } from "../../errors/ConflictError";
 import { UnauthorizedError } from "../../errors/UnauthorizedError";
 import User, { IUser } from "../../models/userModel";
 import { createTokens, updateRefreshToken } from "./tokens";
-import { TokenPair } from "./types";
+import { TokenPairWithId } from "./types";
 import bcrypt from "bcrypt";
 
 export const loginUser = async (
   email: string,
   password: string
-): Promise<TokenPair> => {
+): Promise<TokenPairWithId> => {
   if (!email || !password) {
     throw new BadRequestError("missing email or password");
   }
@@ -32,7 +32,7 @@ export const loginUser = async (
   const tokens = await createTokens(user);
   await updateRefreshToken(user, tokens.refreshToken);
 
-  return tokens;
+  return { id: user._id, ...tokens };
 };
 
 export const registerUser = async (
@@ -40,7 +40,7 @@ export const registerUser = async (
   password: string,
   username: string,
   fullName: string
-): Promise<TokenPair> => {
+): Promise<TokenPairWithId> => {
   // TODO: add username and fullname validation
   if (!email || !password) {
     throw new BadRequestError("missing required field");
@@ -66,5 +66,5 @@ export const registerUser = async (
   const tokens = await createTokens(user);
   await updateRefreshToken(user, tokens.refreshToken);
 
-  return tokens;
+  return { id: user._id, ...tokens };
 };

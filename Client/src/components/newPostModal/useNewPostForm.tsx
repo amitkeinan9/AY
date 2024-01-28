@@ -10,6 +10,7 @@ interface NewPostFormProps {
 
 export const useNewPostForm = (props: NewPostFormProps) => {
   const { image, onSaveSuccess } = props;
+  const userId = localStorage.getItem("connectedUserId");
 
   const queryClient = useQueryClient();
   const createPostMutation = useMutation({
@@ -17,6 +18,7 @@ export const useNewPostForm = (props: NewPostFormProps) => {
       backendAxiosInstance.post<PostDTO>("/posts", newPost),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["posts"] });
+      queryClient.invalidateQueries({ queryKey: ["posts", userId] });
       onSaveSuccess();
     },
   });

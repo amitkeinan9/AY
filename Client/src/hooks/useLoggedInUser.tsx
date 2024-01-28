@@ -3,15 +3,15 @@ import { UserDTO } from "../types/user";
 import { backendAxiosInstance } from "../axios/backendInstance";
 
 export const useLoggedInUser = () => {
-  const email = localStorage.getItem("connectedUserEmail");
+  const userId = localStorage.getItem("connectedUserId");
 
   const {
     data: connectedUser,
     isLoading,
     isError,
   } = useQuery<UserDTO>({
-    queryKey: ["users", email],
-    queryFn: async () => (await backendAxiosInstance.get(`/users/me`)).data,
+    queryKey: ["users", userId],
+    queryFn: async () => (await backendAxiosInstance.get(`/users/${userId}`)).data,
   });
 
   return { connectedUser, isLoading, isError };

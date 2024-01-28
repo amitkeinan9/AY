@@ -22,7 +22,7 @@ export const saveImage = async (
   const imageData: string = base64Data.split(",")[1];
   const imageFormat: string = base64Data.split(";")[0].split("/")[1];
 
-  const fullFileName = `${fileName}.${imageFormat}`;
+  const fullFileName = `${fileName}-${new Date().getTime()}.${imageFormat}`;
 
   await fs.writeFile(
     path.resolve("public", "images", type, fullFileName),
@@ -30,5 +30,5 @@ export const saveImage = async (
     { encoding: "base64" }
   );
 
-  return `${process.env.SERVER_URL}/public/images/posts/${fullFileName}`;
+  return `${process.env.SERVER_URL}/public/images/${type}/${fullFileName}`;
 };

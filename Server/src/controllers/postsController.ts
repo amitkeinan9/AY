@@ -5,7 +5,6 @@ import { CommentDTO, PostDTO } from "../BL/posts/types";
 import { AuthRequest } from "../middlewares/validateAuth";
 import { BadRequestError } from "../errors/BadRequestError";
 import { addComment } from "../BL/posts/commentsBL";
-import { Comment } from "../models/postModel";
 
 export const getAllPosts = async (
   req: Request,

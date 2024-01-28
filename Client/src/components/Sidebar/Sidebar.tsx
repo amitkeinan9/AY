@@ -25,8 +25,12 @@ export const Sidebar = () => {
       <SidebarContainer>
         <ButtonsContainer>
           <img src="src/assets/logo.svg" width="50" />
-          <NavigationLink text="Home" path="/home" Icon={HomeIcon} />
-          <NavigationLink text="Profile" path="/profile" Icon={PersonIcon} />
+          <NavigationLink text="Home" path="/home" Icon={HomeIcon}  />
+          <NavigationLink
+            text="Profile"
+            path="/profile"
+            Icon={PersonIcon}
+          />
         </ButtonsContainer>
         <ButtonsContainer>
           <ActiveButton

@@ -27,13 +27,14 @@ export const useLoginFormActions = (
 
   const userData = { email, password, username, fullName };
 
-  const finishLogin = (tokens: {
+  const finishLogin = (tokensWithId: {
+    id: string;
     accessToken: string;
     refreshToken: string;
   }) => {
-    localStorage.setItem("accessToken", tokens.accessToken);
-    localStorage.setItem("refreshToken", tokens.refreshToken);
-    localStorage.setItem("connectedUserEmail", email);
+    localStorage.setItem("accessToken", tokensWithId.accessToken);
+    localStorage.setItem("refreshToken", tokensWithId.refreshToken);
+    localStorage.setItem("connectedUserId", tokensWithId.id);
 
     navigate("/home");
   };
