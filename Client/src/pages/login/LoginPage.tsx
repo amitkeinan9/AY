@@ -37,6 +37,8 @@ const LoginPage: React.FC = () => {
   const {
     handleEmailChange,
     handlePasswordChange,
+    handleUsernameChange,
+    handleFullNameChange,
     emailError,
     error,
     inLoginMode,
@@ -66,6 +68,8 @@ const LoginPage: React.FC = () => {
           <TextField
             label="Email"
             value={email}
+            InputLabelProps={{ sx: { fontSize: '0.9rem' } }}
+            InputProps={{ sx: { height: '3rem' } }}
             onChange={handleEmailChange}
             error={emailError}
           />
@@ -73,8 +77,28 @@ const LoginPage: React.FC = () => {
             label="Password"
             type="password"
             value={password}
+            InputLabelProps={{ sx: { fontSize: '0.9rem' } }}
+            InputProps={{ sx: { height: '3rem' } }}
             onChange={handlePasswordChange}
           />
+          {!inLoginMode &&
+            <>
+              <TextField
+                label="Username"
+                value={username}
+                InputLabelProps={{ sx: { fontSize: '0.9rem' } }}
+                InputProps={{ sx: { height: '3rem' } }}
+                onChange={handleUsernameChange}
+              />
+              <TextField
+                label="Full Name"
+                value={fullName}
+                InputLabelProps={{ sx: { fontSize: '0.9rem' } }}
+                InputProps={{ sx: { height: '3rem' } }}
+                onChange={handleFullNameChange}
+              />
+            </>
+          }
           {error && (
             <Alert severity="error">
               <AlertTitle>Oof</AlertTitle>

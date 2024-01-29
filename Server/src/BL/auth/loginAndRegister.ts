@@ -42,13 +42,18 @@ export const registerUser = async (
   fullName: string
 ): Promise<TokenPairWithId> => {
   // TODO: add username and fullname validation
-  if (!email || !password) {
+  if (!email || !password || !username || !fullName) {
     throw new BadRequestError("missing required field");
   }
 
-  const userWithEmail = await User.findOne({ email: email });
+  const userWithEmail = await User.findOne({ email });
   if (userWithEmail) {
     throw new ConflictError("email already exists");
+  }
+
+  const userWithUsername = await User.findOne({ username });
+  if (userWithUsername) {
+    throw new ConflictError("username already exists");
   }
 
   // Save the new user

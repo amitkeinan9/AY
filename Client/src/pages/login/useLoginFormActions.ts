@@ -25,7 +25,7 @@ export const useLoginFormActions = (
     },
   });
 
-  const userData = { email, password, username, fullName };
+  // const userData = { email, password, username, fullName };
 
   const finishLogin = (tokensWithId: {
     id: string;
@@ -39,9 +39,9 @@ export const useLoginFormActions = (
     navigate("/home");
   };
 
-  const handleAction = async (apiRoute: string, body?: object) => {
+  const handleAction = async (apiRoute: string, body: object) => {
     try {
-      const { data } = await axios.post(apiRoute, body ?? userData);
+      const { data } = await axios.post(apiRoute, body);
       finishLogin(data);
     } catch (error) {
       if (axios.isAxiosError(error)) {
@@ -55,14 +55,18 @@ export const useLoginFormActions = (
   };
 
   const handleLogin = async () => {
+    const userData = { email, password };
+
     setIsLoginLoading(true);
-    await handleAction("/api/auth/login");
+    await handleAction("/api/auth/login", userData);
     setIsLoginLoading(false);
   };
 
   const handleRegister = async () => {
+    const userData = { email, password, username, fullName };
+
     setIsRegisterLoading(true);
-    handleAction("/api/auth/register");
+    handleAction("/api/auth/register", userData);
     setIsRegisterLoading(false);
   };
 
