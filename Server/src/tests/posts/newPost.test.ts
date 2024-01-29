@@ -6,14 +6,12 @@ import path from "path";
 import { Express } from "express";
 import { seedDB } from "../utils/seedDB";
 import { StatusCodes } from "http-status-codes";
-import { imageBase64 } from "./newPostTestData";
 
 let app: Express;
 let accessToken: string;
 
 describe("Create post tests", () => {
   beforeAll(async () => {
-    process.env.DB_URL = "mongodb://localhost:27017/AY_testing";
     app = await initApp();
 
     // Reset data
@@ -61,6 +59,8 @@ describe("Create post tests", () => {
   });
 
   test("Should create post with image", async () => {
+    const imageBase64 = "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAATwAAAE";
+
     const response = await request(app)
       .post("/posts")
       .set({

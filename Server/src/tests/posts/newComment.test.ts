@@ -4,7 +4,6 @@ import mongoose from "mongoose";
 import { Express } from "express";
 import { posts, seedDB } from "../utils/seedDB";
 import { StatusCodes } from "http-status-codes";
-import { imageBase64 } from "./newPostTestData";
 
 let app: Express;
 let accessToken: string;
@@ -14,7 +13,6 @@ const nonExistingPostId = "659c01e59acd2fa6c7dc5d4f";
 
 describe("Create post tests", () => {
   beforeAll(async () => {
-    process.env.DB_URL = "mongodb://localhost:27017/AY_testing";
     app = await initApp();
 
     // Reset data

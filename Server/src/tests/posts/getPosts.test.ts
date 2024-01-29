@@ -10,7 +10,6 @@ let app: Express;
 let accessToken: string;
 
 beforeAll(async () => {
-  process.env.DB_URL = "mongodb://localhost:27017/AY_testing";
   app = await initApp();
 
   // Reset data
