@@ -1,6 +1,6 @@
 import { NextFunction, Request, Response } from "express";
 import { StatusCodes } from "http-status-codes";
-import { createPost, getPostById, getPosts } from "../BL/posts/postsBL";
+import { createPost, deletePostById, editPostById, getPostById, getPosts } from "../BL/posts/postsBL";
 import { CommentDTO, PostDTO } from "../BL/posts/types";
 import { AuthRequest } from "../middlewares/validateAuth";
 import { BadRequestError } from "../errors/BadRequestError";
@@ -44,6 +44,43 @@ export const getPost = async (
     const post = await getPostById(req.params.id);
 
     res.status(StatusCodes.OK).json(post);
+  } catch (e) {
+    next(e);
+  }
+};
+
+export const deletePost = async (
+  req: AuthRequest,
+  res: Response,
+  next: NextFunction
+) => {
+  try {
+    const post = await deletePostById(req.user?._id, req.params.id);
+
+    res.status(StatusCodes.OK).json(post);
+  } catch (e) {
+    next(e);
+  }
+};
+
+export const editPost = async (
+  req: AuthRequest,
+  res: Response,
+  next: NextFunction
+) => {
+  try {
+    if (!req.body.content && !req.body.image) {
+      throw new BadRequestError("Cannot post empty post");
+    }
+
+    const updatedPost: PostDTO = await editPostById(
+      req.user?._id,
+      req.params.id,
+      req.body.content,
+      req.body.image
+    );
+
+    res.status(StatusCodes.OK).json(updatedPost);
   } catch (e) {
     next(e);
   }

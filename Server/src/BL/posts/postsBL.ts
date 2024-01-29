@@ -11,6 +11,7 @@ import { PostDTO } from "./types";
 import { ImageType, saveImage } from "../common/images";
 import { parsePostToDTO } from "./postsParser";
 import { NotFoundError } from "../../errors/NotFoundError";
+import { ForbiddenError } from "../../errors/ForbiddenError";
 
 export const getPosts = async (authorId?: string): Promise<PostDTO[]> => {
   const aggregationStages: PipelineStage[] = [
@@ -43,6 +44,59 @@ export const getPostById = async (postId: string) => {
     const { __v, ...postToReturn } = post.toObject();
 
     return postToReturn;
+  } catch (e) {
+    if (e instanceof mongoose.Error.CastError) {
+      throw new NotFoundError("Couldn't find requested post");
+    }
+
+    throw e;
+  }
+};
+
+export const deletePostById = async (authorId: string, postId: string) => {
+  try {
+    const existPost = await Post.findById(postId).populate("author");
+
+    if (!existPost) {
+      throw new NotFoundError("Couldn't find requested post");
+    }
+
+    if (existPost.author.id !== authorId) {
+      throw new ForbiddenError("Couldn't delete a post of another connected user");
+    }
+
+    await Post.findByIdAndDelete(postId);
+  } catch (e) {
+    if (e instanceof mongoose.Error.CastError) {
+      throw new NotFoundError("Couldn't find requested post");
+    }
+
+    throw e;
+  }
+};
+
+export const editPostById = async (authorId: string, postId: string, content: string, imageBase64?: string): Promise<PostDTO> => {
+  try {
+    const existPost = await Post.findById(postId).populate("author");
+
+    if (!existPost) {
+      throw new NotFoundError("Couldn't find requested post");
+    }
+
+    if (existPost.author.id !== authorId) {
+      throw new ForbiddenError("Couldn't edit a post of another connected user");
+    }
+
+    existPost.content = content;
+    existPost.image = !imageBase64 ? undefined : await saveImage(
+      imageBase64,
+      postId,
+      ImageType.POST
+    );
+
+    const updatedPost = await existPost.save();
+
+    return parsePostToDTO(updatedPost);
   } catch (e) {
     if (e instanceof mongoose.Error.CastError) {
       throw new NotFoundError("Couldn't find requested post");

@@ -42,6 +42,12 @@ export const posts = [
     image: "122",
   },
   {
+    _id: new mongoose.Types.ObjectId("659c01e59acd3fa6c7dc5123"),
+    content: "Hi how are you",
+    author: new mongoose.Types.ObjectId("6599900ea4c73eb4803a5625"),
+    image: "123",
+  },
+  {
     _id: new mongoose.Types.ObjectId("659c09bf9acd3fa6c7dc5d51"),
     content: "Hello2",
     author: new mongoose.Types.ObjectId("6599900ea4c73eb4803a5624"),

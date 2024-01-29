@@ -1,22 +1,29 @@
-import { styled } from "@mui/system";
+import { Box, styled } from "@mui/system";
 import { Post } from "../../components/post/Post";
-import BackIcon from "@mui/icons-material/ArrowBackIosNewOutlined";
+import { ArrowBackIosNewOutlined as BackIcon, Edit as EditIcon, Delete as DeleteIcon } from "@mui/icons-material";
 import { useLocation, useNavigate, useParams } from "react-router-dom";
 import IconButton from "@mui/material/IconButton/IconButton";
-import { backButtonStyles, postHeaderStyles } from "./styles";
-import { useQuery } from "@tanstack/react-query";
+import { actionPostButtonStyles, actionPostContainerStyles, backButtonStyles, postHeaderStyles } from "./styles";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { backendAxiosInstance } from "../../axios/backendInstance";
 import { Comment, PostDTO, PostWithComments } from "../../types/post";
 import { NewComment } from "../../components/newComment/NewComment";
+import { Alert } from "@mui/material";
+import { useState } from "react";
+import { PostModal } from "../../components/PostModal/PostModal";
 
 const PostHeader = styled("div")(postHeaderStyles);
 const BackButton = styled(IconButton)(backButtonStyles);
+const ActionPostContainer = styled(Box)(actionPostContainerStyles)
+const ActionPostButton = styled(IconButton)(actionPostButtonStyles);
 
 export const PostPage = () => {
-  const navigator = useNavigate();
+  const navigate = useNavigate();
   const { state }: { state: Omit<PostDTO, "_id"> } = useLocation();
-
   const { postId } = useParams();
+  const [isEditPostOpen, setIsEditPostOpen] = useState(false);
+  const userId = localStorage.getItem("connectedUserId");
+  const queryClient = useQueryClient();
 
   const { data: post } = useQuery({
     queryKey: ["posts", postId],
@@ -32,17 +39,47 @@ export const PostPage = () => {
     },
   });
 
+  const deletePostMutation = useMutation({
+    mutationFn: () => backendAxiosInstance.delete(`/posts/${postId}`),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["posts"] });
+      queryClient.invalidateQueries({ queryKey: ["posts", userId] });
+      goBack()
+    }
+  });
+
+  const editPostMutation = useMutation({
+    mutationFn: (updatedPost: { content: string; image?: string }) =>
+      backendAxiosInstance.put(`/posts/${postId}`, updatedPost),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["posts"] });
+      queryClient.invalidateQueries({ queryKey: ["posts", userId] });
+      setIsEditPostOpen(false);
+    },
+  });
+
   const goBack = () => {
-    navigator(-1);
+    navigate(-1);
   };
 
   return (
     <div>
       <PostHeader>
-        <BackButton onClick={goBack}>
-          <BackIcon />
-        </BackButton>
-        <strong>Post</strong>
+        <Box>
+          <BackButton onClick={goBack}>
+            <BackIcon />
+          </BackButton>
+          <strong>Post</strong>
+        </Box>
+        {post.author._id === userId &&
+          <>
+            {deletePostMutation.isError && <Alert severity="error">Failed to delete post</Alert>}
+            <ActionPostContainer>
+              <ActionPostButton color="primary" onClick={() => setIsEditPostOpen(true)}><EditIcon /></ActionPostButton>
+              <ActionPostButton color="primary" onClick={() => deletePostMutation.mutate()}><DeleteIcon /></ActionPostButton>
+            </ActionPostContainer>
+          </>
+        }
       </PostHeader>
       <Post
         content={post.content}
@@ -58,6 +95,14 @@ export const PostPage = () => {
           author={comment.author}
         />
       ))}
+      <PostModal
+        isOpen={isEditPostOpen}
+        isNewPost={false}
+        currContent={post.content}
+        currImage={post.image}
+        actionPostMutation={editPostMutation}
+        onClose={() => setIsEditPostOpen(false)}
+      />
     </div>
   );
 };
