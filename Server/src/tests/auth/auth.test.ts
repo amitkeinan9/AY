@@ -10,6 +10,8 @@ let app: Express;
 const user = {
   email: "testUser@test.com",
   password: "1234567890",
+  username: "yaelAmit123",
+  fullName: "Yael Buchris"
 };
 
 beforeAll(async () => {
@@ -39,9 +41,21 @@ describe("Auth tests", () => {
     expect(response.statusCode).toBe(StatusCodes.CONFLICT);
   });
 
+  test("Test register with an existing username", async () => {
+    const response = await request(app).post("/auth/register").send({
+      email: "testUser123@test.com",
+      password: "1234567890",
+      username: "yaelAmit123",
+      fullName: "Yael Buchris"
+    });
+    expect(response.statusCode).toBe(StatusCodes.CONFLICT);
+  });
+
   test("Test register without password", async () => {
     const response = await request(app).post("/auth/register").send({
       email: "test@test.com",
+      username: "yaelAmit123456",
+      fullName: "Yael Buchris"
     });
     expect(response.statusCode).toBe(StatusCodes.BAD_REQUEST);
   });

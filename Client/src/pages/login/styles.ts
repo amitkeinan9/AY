@@ -12,7 +12,7 @@ export const pageWrapperStyles = css({
 
 export const logoStyles = css({
   width: "40%",
-  marginBottom: 40,
+  marginBottom: 10,
 });
 
 export const loginFormStyles = css({
@@ -52,6 +52,7 @@ const GOOGLE_COLOR = "#004C97";
 
 export const googleButtonStyles = css({
   color: GOOGLE_COLOR,
+  marginBottom: '1rem',
   "&:hover": {
     borderColor: GOOGLE_COLOR,
     borderWidth: "2px",

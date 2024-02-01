@@ -5,16 +5,14 @@ export const useLoginForm = () => {
   const [inLoginMode, setInLoginMode] = useState<boolean>(true);
   const [email, setEmail] = useState<string>("");
   const [password, setPassword] = useState<string>("");
-  const [username, setUsername] = useState<string>("yael");
-  const [fullName, setFullName] = useState<string>("yael bucris");
-
-  // Todo: add username and fullName in register
+  const [username, setUsername] = useState<string>("");
+  const [fullName, setFullName] = useState<string>("");
 
   const resetForm = () => {
     setEmail("");
     setPassword("");
-    // setUsername("");
-    // setFullName("");
+    setUsername("");
+    setFullName("");
     setError("");
   };
 
@@ -26,6 +24,13 @@ export const useLoginForm = () => {
     setPassword(event.target.value);
   };
 
+  const handleUsernameChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    setUsername(event.target.value);
+  };
+
+  const handleFullNameChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    setFullName(event.target.value);
+  };
   const toggleMode = () => {
     setInLoginMode((prevMode) => !prevMode);
     resetForm();
@@ -39,13 +44,15 @@ export const useLoginForm = () => {
   }, [email]);
 
   const isFormValid = useMemo(
-    () => email && !emailError && password,
-    [email, password, emailError]
+    () => email && !emailError && password && (inLoginMode || (username && fullName)),
+    [email, password, username, fullName, emailError, inLoginMode]
   );
 
   return {
     handleEmailChange,
     handlePasswordChange,
+    handleUsernameChange,
+    handleFullNameChange,
     isFormValid,
     emailError,
     toggleMode,
