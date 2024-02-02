@@ -2,15 +2,14 @@ import request from "supertest";
 import initApp from "../../../app";
 import mongoose from "mongoose";
 import { Express } from "express";
-import User from "../../../models/userModel";
 import { OAuth2Client } from "google-auth-library";
-import {
-  existingGoogleUser,
-  existingNativeUser,
-  nonExistingGoogleUser,
-} from "./googleAuthTestData";
+import { seedDB } from "../../utils/seedDB";
 
 let app: Express;
+
+const existingGoogleUser = "yaelili70@gmail.com";
+const nonExistingGoogleUser = "googleNew@gmail.com";
+const existingNativeUser = "amit@gmail.com";
 
 const oauthClient2: Partial<OAuth2Client> = {
   getToken: jest.fn(),
@@ -23,15 +22,7 @@ beforeAll(async () => {
   });
 
   // Reset data
-  await User.deleteMany({
-    $or: [
-      { email: existingGoogleUser.email },
-      { email: existingNativeUser.email },
-      { email: nonExistingGoogleUser.email },
-    ],
-  });
-
-  await User.create([existingGoogleUser, existingNativeUser]);
+  await seedDB();
 });
 
 afterAll(async () => {
@@ -47,7 +38,7 @@ describe("Google auth tests", () => {
     });
     (oauthClient2.verifyIdToken as jest.Mock).mockResolvedValue({
       getPayload: jest.fn().mockReturnValue({
-        email: existingGoogleUser.email,
+        email: existingGoogleUser,
       }),
     });
 
@@ -67,7 +58,7 @@ describe("Google auth tests", () => {
     });
     (oauthClient2.verifyIdToken as jest.Mock).mockResolvedValue({
       getPayload: jest.fn().mockReturnValue({
-        email: nonExistingGoogleUser.email,
+        email: nonExistingGoogleUser,
       }),
     });
 
@@ -87,7 +78,7 @@ describe("Google auth tests", () => {
     });
     (oauthClient2.verifyIdToken as jest.Mock).mockResolvedValue({
       getPayload: jest.fn().mockReturnValue({
-        email: existingNativeUser.email,
+        email: existingNativeUser,
       }),
     });
 

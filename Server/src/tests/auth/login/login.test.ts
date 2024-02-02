@@ -2,20 +2,17 @@ import request from "supertest";
 import initApp from "../../../app";
 import mongoose from "mongoose";
 import { Express } from "express";
-import User from "../../../models/userModel";
-import { existingGoogleUser } from "./loginTestData";
+import { seedDB } from "../../utils/seedDB";
 
 let app: Express;
+
+const existingGoogleUser = "yaelili70@gmail.com";
 
 beforeAll(async () => {
   app = await initApp();
 
   // Reset data
-  await User.deleteMany({
-    $or: [{ email: existingGoogleUser.email }],
-  });
-
-  await User.create([existingGoogleUser]);
+  await seedDB();
 });
 
 afterAll(async () => {
@@ -25,8 +22,8 @@ afterAll(async () => {
 describe("Login tests", () => {
   test("Should not log google user in with password", async () => {
     const response = await request(app).post("/auth/login").send({
-      email: "google@gmail.com",
-      password: "YaelLovesAmit",
+      email: existingGoogleUser,
+      password: "AmitLovesYael",
     });
 
     expect(response.statusCode).toBe(400);

@@ -17,7 +17,7 @@ interface AppConfig {
   oAuthClientMock?: Partial<OAuth2Client>;
 }
 
-env.config();
+env.config({ path: `./environments/${process.env.NODE_ENV}.env` });
 
 const initApp = (config: AppConfig = {}): Promise<Express> =>
   new Promise<Express>(async (resolve) => {

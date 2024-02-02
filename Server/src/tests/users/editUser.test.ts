@@ -15,7 +15,6 @@ const existingUserId = "6596cd59a05df9782d137cd8";
 
 describe("Edit profile tests", () => {
     beforeAll(async () => {
-        process.env.DB_URL = "mongodb://localhost:27017/AY_testing";
         app = await initApp();
 
         // Reset data

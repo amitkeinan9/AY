@@ -16,7 +16,6 @@ const existingPostIdOfAnotherUser = "659c01e59acd3fa6c7dc5d4f";
 
 describe("Delete post tests", () => {
   beforeAll(async () => {
-    process.env.DB_URL = "mongodb://localhost:27017/AY_testing";
     app = await initApp();
 
     // Reset data

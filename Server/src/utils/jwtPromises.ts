@@ -1,8 +1,7 @@
 import jwt, {
   JwtPayload,
   Secret,
-  VerifyErrors,
-  VerifyOptions,
+  VerifyErrors
 } from "jsonwebtoken";
 
 export const jwtVerify = (token: string, secret: Secret) =>
