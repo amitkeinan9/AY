@@ -10,9 +10,10 @@ interface Props {
   text: string;
   path: string;
   Icon: JSX.ElementType;
+  withText: boolean;
 }
 
-export const NavigationLink = ({ text, path, Icon }: Props) => {
+export const NavigationLink = ({ text, path, Icon, withText }: Props) => {
   return (
     <NavigationLinkButton
       to={path}
@@ -23,7 +24,7 @@ export const NavigationLink = ({ text, path, Icon }: Props) => {
       }}
     >
       <Icon sx={{ fontSize: "2rem", marginRight: 1 }} />
-      <NavigationLinkText>{text}</NavigationLinkText>
+      {withText && <NavigationLinkText>{text}</NavigationLinkText>}
     </NavigationLinkButton>
   );
 };

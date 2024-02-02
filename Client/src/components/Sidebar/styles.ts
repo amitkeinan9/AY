@@ -2,6 +2,12 @@ import { css } from "@emotion/react";
 
 export const sidebarContainerStyles = css({
   width: "20vw",
+  "@media (max-width: 900px)": {
+    width: "fit-content",
+  },
+  "@media (max-width: 700px)": {
+    marginLeft: "1vw",
+  },
   marginLeft: "8vw",
   padding: "30px",
   height: "100%",

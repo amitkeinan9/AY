@@ -33,6 +33,7 @@ export const PostList = (props: PostListProps) => {
       ) : (
         posts.map(({ _id, author, content, commentsCount, image }: PostDTO) => (
           <Post
+            key={_id}
             author={author}
             content={content}
             image={image}
