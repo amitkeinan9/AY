@@ -1,0 +1,244 @@
+openapi: 3.0.3
+info:
+  title: AY Server
+  description: |-
+    The backend server for AY app. Includes endpoint to interact with auth, users and posts.
+  version: 1.0.0
+paths:
+  /auth/register:
+    post:
+      tags:
+        - Auth
+      summary: Registers a new user
+      description: Creates a new user in the DB and logs the user in
+      requestBody:
+        description: The new user data
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                email:
+                  type: string
+                password:
+                  type: string
+                username:
+                  type: string
+                fullname:
+                  type: string
+              required:
+                - email
+                - password
+                - username
+                - fullname
+
+        required: true
+      responses:
+        "200":
+          description: User created and logged in
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Tokens"
+        "400":
+          description: Missing field
+        "409":
+          description: "Used email/username"
+  /auth/login:
+    post:
+      tags:
+        - Auth
+      summary: Logs an existing user in
+      description: Checks the give email/password and if there's a match logs the user in
+      requestBody:
+        description: Login credentials
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                email:
+                  type: string
+                password:
+                  type: string
+              required:
+                - email
+                - password
+        required: true
+      responses:
+        "200":
+          description: User is logged in
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Tokens"
+        "400":
+          description: Missing field
+        "401":
+          description: "Incorrect credentials"
+  /auth/google:
+    post:
+      tags:
+        - Auth
+      summary: Log in with google
+      description: Logs/Register a user with google and return the token pair
+      requestBody:
+        description: Login credentials
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                code:
+                  type: string
+              required:
+                - code
+        required: true
+      responses:
+        "200":
+          description: User is logged in
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Tokens"
+        "400":
+          description: Email is already associated to a user
+  /auth/logout:
+    get:
+      tags:
+        - Auth
+      summary: Logs a user out
+      description: Removes all refresh tokens from the user
+      parameters:
+        - $ref: "#/components/parameters/refreshToken"
+      responses:
+        "200":
+          description: User is logged out
+        "401":
+          description: Invalid refresh token
+  /auth/refresh:
+    get:
+      tags:
+        - Auth
+      summary: Refreshes the access token
+      description: Return a new token pair
+      parameters:
+        - $ref: "#/components/parameters/refreshToken"
+      responses:
+        "200":
+          description: New tokens
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Tokens"
+        "401":
+          description: Invalid refresh token
+  /users/{id}:
+    get:
+      tags:
+        - Users
+      summary: Get user data
+      description: Return a new token pair
+      parameters:
+        - $ref: "#/components/parameters/accessToken"
+        - $ref: "#/components/parameters/userId"
+      responses:
+        "200":
+          description: Requested user data
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/user"
+        "404":
+          description: User not found
+    put:
+      tags:
+        - Users
+      summary: Update user
+      description: Edit fields in user object
+      parameters:
+        - $ref: "#/components/parameters/accessToken"
+        - $ref: "#/components/parameters/userId"
+      requestBody:
+        description: New data
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                profilePic:
+                  type: string
+                username:
+                  type: string
+                fullname:
+                  type: string
+                password:
+                  type: string
+        required: true
+      responses:
+        "200":
+          description: Requested user data
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/user"
+        "400":
+          "description": "Must pass at least one field"
+        "403":
+          description: Cannot edit another user
+        "404":
+          description: User not found
+        "409":
+          description: User name is taken
+
+components:
+  schemas:
+    user:
+      title: User
+      type: object
+      properties:
+        _id:
+          type: string
+        email:
+          type: string
+        username:
+          type: string
+        fullname:
+          type: string
+        profilePic:
+          type: string
+    Tokens:
+      title: Tokens
+      type: object
+      properties:
+        id:
+          type: string
+          description: The id of the logged in user
+        accessToken:
+          type: string
+          description: The user's access token
+        refreshToken:
+          type: string
+          description: Refresh token to get new access token
+  parameters:
+    accessToken:
+      in: header
+      name: Authorization
+      schema:
+        type: string
+      required: true
+      description: Access token of the user (Should start with Bearer)
+    refreshToken:
+      name: Authorization
+      in: header
+      description: Refresh token of the user (Should start with Bearer)
+      required: true
+      schema:
+        type: string
+    userId:
+      name: id
+      in: path
+      description: Id of requested user
+      schema:
+        type: string
+      required: true
