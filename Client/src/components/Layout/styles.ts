@@ -15,4 +15,9 @@ export const outletContainerStyles = css({
   flexGrow: "1",
   borderRight: "1px solid rgba(239,243,244,1.00)",
   borderLeft: "1px solid rgba(239,243,244,1.00)",
+  flex: 1,
+  overflowY: 'auto',
+  "&::-webkit-scrollbar": {
+    width: 0 /* Width of the invisible scrollbar */
+  }
 });
