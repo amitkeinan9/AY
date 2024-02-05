@@ -1,9 +1,3 @@
-openapi: 3.0.3
-info:
-  title: AY Server
-  description: |-
-    The backend server for AY app. Includes endpoint to interact with auth, users and posts.
-  version: 1.0.0
 paths:
   /auth/register:
     post:
@@ -24,13 +18,13 @@ paths:
                   type: string
                 username:
                   type: string
-                fullname:
+                fullName:
                   type: string
               required:
                 - email
                 - password
                 - username
-                - fullname
+                - fullName
 
         required: true
       responses:
@@ -139,8 +133,9 @@ paths:
         - Users
       summary: Get user data
       description: Return a new token pair
+      security: 
+        - bearerAuth: []
       parameters:
-        - $ref: "#/components/parameters/accessToken"
         - $ref: "#/components/parameters/userId"
       responses:
         "200":
@@ -156,8 +151,9 @@ paths:
         - Users
       summary: Update user
       description: Edit fields in user object
+      security: 
+        - bearerAuth: []
       parameters:
-        - $ref: "#/components/parameters/accessToken"
         - $ref: "#/components/parameters/userId"
       requestBody:
         description: New data
@@ -170,7 +166,7 @@ paths:
                   type: string
                 username:
                   type: string
-                fullname:
+                fullName:
                   type: string
                 password:
                   type: string
@@ -190,7 +186,168 @@ paths:
           description: User not found
         "409":
           description: User name is taken
-
+  /posts:
+    get:
+      tags:
+        - Posts
+      summary: Get all posts
+      description: Return all posts
+      security: 
+        - bearerAuth: []
+      responses:
+        "200":
+          description: All posts
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/post"
+    post:
+      tags:
+        - Posts
+      summary: Create a new post
+      description: Creates a new post in the DB
+      security: 
+        - bearerAuth: []
+      requestBody:
+        description: The new post data
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                content:
+                  type: string
+                image:
+                  type: string
+        required: true
+      responses:
+        "201":
+          description: Post created
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/post"
+        "400":
+          description: Missing field
+  /posts/{id}:
+    get:
+      tags:
+        - Posts
+      summary: Get post data
+      description: Return the post data
+      security: 
+        - bearerAuth: []
+      parameters:
+        - $ref: "#/components/parameters/postId"
+      responses:
+        "200":
+          description: Requested post data
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/post"
+        "404":
+          description: Post not found
+    put:
+      tags:
+        - Posts
+      summary: Update post
+      description: Edit fields in post object
+      security: 
+        - bearerAuth: []
+      parameters:
+        - $ref: "#/components/parameters/postId"
+      requestBody:
+        description: New data
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                content:
+                  type: string
+                image:
+                  type: string
+        required: true
+      responses:
+        "200":
+          description: Deleted post
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/post"
+        "400":
+          description: "Must pass at least one field"
+        "403":
+          description: Cannot edit post of another user
+        "404":
+          description: Post not found
+    delete:
+      tags:
+        - Posts
+      summary: Delete a post 
+      description: Delete a post by id 
+      security: 
+        - bearerAuth: []
+      parameters:
+        - $ref: "#/components/parameters/postId"
+      responses:
+        "200":
+          description: Post deleted
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/post"
+        "403":
+          description: Cannot delete post of another user
+        "404":
+          description: Post not found
+  /posts/own:
+    get:
+      tags:
+        - Posts
+      summary: Get own posts
+      description: Return own posts
+      security: 
+        - bearerAuth: []
+      responses:
+        "200":
+          description: Own posts
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/post"
+  /posts/{id}/comments:
+    post:
+      tags:
+        - Posts
+      summary: Add a new comment
+      description: Add a new comment to a post
+      security: 
+        - bearerAuth: []
+      parameters:
+        - $ref: "#/components/parameters/postId"
+      requestBody:
+        description: The new comment
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                content:
+                  type: string
+        required: true
+      responses:
+        "201":
+          description: Comment added
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/comment"
+        "400":
+          description: Missing field
+        "404":
+          description: Post not found
 components:
   schemas:
     user:
@@ -203,9 +360,36 @@ components:
           type: string
         username:
           type: string
-        fullname:
+        fullName:
           type: string
         profilePic:
+          type: string
+    post:
+      title: Post
+      type: object
+      properties:
+        _id:
+          type: string
+        content:
+          type: string
+        image:
+          type: string
+        author:
+          type: object
+          properties: 
+            _id:
+              type: string
+            email: 
+              type: string
+        commentsCount:
+          type: number
+    comment: 
+      title: Comment
+      type: object
+      properties:
+        author:
+          type: string
+        content:
           type: string
     Tokens:
       title: Tokens
@@ -220,14 +404,13 @@ components:
         refreshToken:
           type: string
           description: Refresh token to get new access token
-  parameters:
-    accessToken:
+  securitySchemes:
+    bearerAuth:
+      type: apiKey
       in: header
       name: Authorization
-      schema:
-        type: string
-      required: true
-      description: Access token of the user (Should start with Bearer)
+      description: Refresh token of the user (Should start with Bearer)
+  parameters:
     refreshToken:
       name: Authorization
       in: header
@@ -239,6 +422,13 @@ components:
       name: id
       in: path
       description: Id of requested user
+      schema:
+        type: string
+      required: true
+    postId:
+      name: id
+      in: path
+      description: Id of requested post
       schema:
         type: string
       required: true

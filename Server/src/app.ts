@@ -1,5 +1,5 @@
 import env from "dotenv";
-import express, { Express, Request, Response } from "express";
+import express, { Express } from "express";
 import mongoose from "mongoose";
 import fsProm from "fs/promises";
 import fs from "fs";
@@ -12,6 +12,8 @@ import morgan from "morgan";
 import { getAuthRouter } from "./routers/authRouter";
 import { OAuth2Client } from "google-auth-library";
 import { errorHandler } from "./middlewares/errorMiddleware";
+import swaggerUI from "swagger-ui-express";
+import swaggerJsDoc from "swagger-jsdoc";
 
 interface AppConfig {
   oAuthClientMock?: Partial<OAuth2Client>;
@@ -37,6 +39,19 @@ const initApp = (config: AppConfig = {}): Promise<Express> =>
       await fsProm.mkdir(path.resolve("public", "images", "posts"));
     }
 
+    const options = {
+      definition: {
+        openapi: "3.0.0",
+        info: {
+          title: "AY Server",
+          version: "1.0.0",
+          description: "The backend server for AY app. Includes endpoint to interact with auth, users and posts.",
+        },
+      },
+      apis: ['./apiDoc.yml'],
+    };
+    const specs = swaggerJsDoc(options);
+
     mongoose.connect(url).then(() => {
       const app = express();
 
@@ -48,6 +63,8 @@ const initApp = (config: AppConfig = {}): Promise<Express> =>
       app.use("/public", express.static("public"));
 
       app.use("/auth", getAuthRouter(config?.oAuthClientMock));
+
+      app.use("/swagger", swaggerUI.serve, swaggerUI.setup(specs));
 
       app.use(validateAuth);
 
