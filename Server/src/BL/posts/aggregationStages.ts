@@ -42,3 +42,9 @@ export const cleanResults: PipelineStage = {
     comments: 0,
   },
 };
+
+export const sortByTimestamp: PipelineStage = {
+  $sort: {
+    _id: -1,
+  },
+};

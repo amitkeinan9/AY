@@ -4,6 +4,7 @@ import {
   countComments,
   getFilterByAuthor,
   lookupAuthors,
+  sortByTimestamp,
   unwindAuthor,
 } from "./aggregationStages";
 import Post, { IPost } from "../../models/postModel";
@@ -19,6 +20,7 @@ export const getPosts = async (authorId?: string): Promise<PostDTO[]> => {
     unwindAuthor,
     countComments,
     cleanResults,
+    sortByTimestamp,
   ];
 
   if (authorId) {
@@ -62,7 +64,9 @@ export const deletePostById = async (authorId: string, postId: string) => {
     }
 
     if (existPost.author.id !== authorId) {
-      throw new ForbiddenError("Couldn't delete a post of another connected user");
+      throw new ForbiddenError(
+        "Couldn't delete a post of another connected user"
+      );
     }
 
     await Post.findByIdAndDelete(postId);
@@ -75,7 +79,12 @@ export const deletePostById = async (authorId: string, postId: string) => {
   }
 };
 
-export const editPostById = async (authorId: string, postId: string, content: string, imageBase64?: string): Promise<PostDTO> => {
+export const editPostById = async (
+  authorId: string,
+  postId: string,
+  content: string,
+  imageBase64?: string
+): Promise<PostDTO> => {
   try {
     const existPost = await Post.findById(postId).populate("author");
 
@@ -84,15 +93,15 @@ export const editPostById = async (authorId: string, postId: string, content: st
     }
 
     if (existPost.author.id !== authorId) {
-      throw new ForbiddenError("Couldn't edit a post of another connected user");
+      throw new ForbiddenError(
+        "Couldn't edit a post of another connected user"
+      );
     }
 
     existPost.content = content;
-    existPost.image = !imageBase64 ? undefined : await saveImage(
-      imageBase64,
-      postId,
-      ImageType.POST
-    );
+    existPost.image = !imageBase64
+      ? undefined
+      : await saveImage(imageBase64, postId, ImageType.POST);
 
     const updatedPost = await existPost.save();
 

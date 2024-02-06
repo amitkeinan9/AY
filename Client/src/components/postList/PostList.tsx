@@ -31,7 +31,7 @@ export const PostList = (props: PostListProps) => {
             Could not fetch posts, please try again later
           </Alert>
         </Container>
-      ) : posts ? (
+      ) : !posts || posts.length === 0 ? (
         <Typography
           sx={{
             textAlign: "center",

@@ -31,10 +31,15 @@ interface PostModalProps {
   isNewPost: boolean;
   currContent?: string;
   currImage?: string;
-  actionPostMutation: UseMutationResult<AxiosResponse<PostDTO, unknown>, Error, {
-    content: string;
-    image?: string;
-  }, unknown>;
+  actionPostMutation: UseMutationResult<
+    AxiosResponse<PostDTO, unknown>,
+    Error,
+    {
+      content: string;
+      image?: string;
+    },
+    unknown
+  >;
   onClose: () => void;
 }
 
@@ -48,9 +53,17 @@ const PostContainer = styled("div")(postContainerStyles);
 const PreviewContainer = styled("div")(previewContainerStyles);
 
 export const PostModal = (props: PostModalProps) => {
-  const { isOpen, isNewPost, currImage, currContent, actionPostMutation, onClose } = props;
+  const {
+    isOpen,
+    isNewPost,
+    currImage,
+    currContent,
+    actionPostMutation,
+    onClose,
+  } = props;
   const { connectedUser, isLoading } = useLoggedInUser();
-  const { selectImage, removeImage, preview, setPreview, selectedImage } = useSelectImage();
+  const { selectImage, removeImage, preview, selectedImage, resetImage } =
+    useSelectImage(currImage);
   const {
     content,
     setContent,
@@ -66,15 +79,11 @@ export const PostModal = (props: PostModalProps) => {
   });
 
   useEffect(() => {
-    removeImage();
+    resetImage();
     resetForm();
 
     if (currContent) {
       setContent(currContent);
-    }
-
-    if (currImage) {
-      setPreview(currImage);
     }
   }, [isOpen]);
 
@@ -107,8 +116,7 @@ export const PostModal = (props: PostModalProps) => {
                 },
               }}
             ></TextField>
-
-            {(preview) && (
+            {preview && (
               <PreviewContainer>
                 <RemoveImageButton onClick={removeImage} size="small">
                   <Close htmlColor="white" />
@@ -142,7 +150,7 @@ export const PostModal = (props: PostModalProps) => {
             onClick={savePost}
             isLoading={isPending}
           >
-            {isNewPost ? 'Post' : 'Save'}
+            {isNewPost ? "Post" : "Save"}
           </LoadingButton>
         </ModalFooter>
       </ModalBody>

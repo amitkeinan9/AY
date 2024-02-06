@@ -14,6 +14,7 @@ import { OAuth2Client } from "google-auth-library";
 import { errorHandler } from "./middlewares/errorMiddleware";
 import swaggerUI from "swagger-ui-express";
 import swaggerJsDoc from "swagger-jsdoc";
+import cors from "cors";
 
 interface AppConfig {
   oAuthClientMock?: Partial<OAuth2Client>;
@@ -45,15 +46,18 @@ const initApp = (config: AppConfig = {}): Promise<Express> =>
         info: {
           title: "AY Server",
           version: "1.0.0",
-          description: "The backend server for AY app. Includes endpoint to interact with auth, users and posts.",
+          description:
+            "The backend server for AY app. Includes endpoint to interact with auth, users and posts.",
         },
       },
-      apis: ['./apiDoc.yml'],
+      apis: ["./apiDoc.yml"],
     };
     const specs = swaggerJsDoc(options);
 
     mongoose.connect(url).then(() => {
       const app = express();
+
+      app.use(cors());
 
       app.use(bodyParser.json({ limit: "30mb" }));
       app.use(bodyParser.urlencoded({ extended: true }));
