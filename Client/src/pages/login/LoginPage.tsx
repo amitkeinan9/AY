@@ -22,6 +22,7 @@ import { useLoginForm } from "./useLoginForm";
 import { useLoginFormActions } from "./useLoginFormActions";
 import GoogleIcon from "@mui/icons-material/Google";
 import { LoadingButton } from "../../components/loadingButton/LoadingButton";
+import logo from "../../assets/logo.svg";
 
 const PageWrapper = styled("div")(pageWrapperStyles);
 const Logo = styled("img")(logoStyles);
@@ -62,14 +63,14 @@ const LoginPage: React.FC = () => {
 
   return (
     <PageWrapper>
-      <Logo src="/src/assets/logo.svg" />
+      <Logo src={logo} />
       <LoginForm>
         <InputFields>
           <TextField
             label="Email"
             value={email}
-            InputLabelProps={{ sx: { fontSize: '0.9rem' } }}
-            InputProps={{ sx: { height: '3rem' } }}
+            InputLabelProps={{ sx: { fontSize: "0.9rem" } }}
+            InputProps={{ sx: { height: "3rem" } }}
             onChange={handleEmailChange}
             error={emailError}
           />
@@ -77,28 +78,28 @@ const LoginPage: React.FC = () => {
             label="Password"
             type="password"
             value={password}
-            InputLabelProps={{ sx: { fontSize: '0.9rem' } }}
-            InputProps={{ sx: { height: '3rem' } }}
+            InputLabelProps={{ sx: { fontSize: "0.9rem" } }}
+            InputProps={{ sx: { height: "3rem" } }}
             onChange={handlePasswordChange}
           />
-          {!inLoginMode &&
+          {!inLoginMode && (
             <>
               <TextField
                 label="Username"
                 value={username}
-                InputLabelProps={{ sx: { fontSize: '0.9rem' } }}
-                InputProps={{ sx: { height: '3rem' } }}
+                InputLabelProps={{ sx: { fontSize: "0.9rem" } }}
+                InputProps={{ sx: { height: "3rem" } }}
                 onChange={handleUsernameChange}
               />
               <TextField
                 label="Full Name"
                 value={fullName}
-                InputLabelProps={{ sx: { fontSize: '0.9rem' } }}
-                InputProps={{ sx: { height: '3rem' } }}
+                InputLabelProps={{ sx: { fontSize: "0.9rem" } }}
+                InputProps={{ sx: { height: "3rem" } }}
                 onChange={handleFullNameChange}
               />
             </>
-          }
+          )}
           {error && (
             <Alert severity="error">
               <AlertTitle>Oof</AlertTitle>
