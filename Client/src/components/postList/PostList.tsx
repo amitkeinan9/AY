@@ -5,6 +5,7 @@ import CircularProgress from "@mui/material/CircularProgress/CircularProgress";
 import Alert from "@mui/material/Alert/Alert";
 import styled from "@emotion/styled";
 import { containerStyles } from "./styles";
+import { Typography } from "@mui/material";
 
 interface PostListProps {
   isLoading: boolean;
@@ -30,6 +31,16 @@ export const PostList = (props: PostListProps) => {
             Could not fetch posts, please try again later
           </Alert>
         </Container>
+      ) : posts ? (
+        <Typography
+          sx={{
+            textAlign: "center",
+            marginTop: 5,
+            color: "gray",
+          }}
+        >
+          No posts yet, Make the first :)
+        </Typography>
       ) : (
         posts.map(({ _id, author, content, commentsCount, image }: PostDTO) => (
           <Post
