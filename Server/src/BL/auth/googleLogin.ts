@@ -22,6 +22,7 @@ export const loginWithGoogle = async (
       email: payload.email,
       fullName: payload.name,
       profilePic: payload.picture,
+      username: payload.email.split("@")[0],
       isGoogleUser: true,
     });
   } else if (!user.isGoogleUser) {
