@@ -1,0 +1,434 @@
+paths:
+  /auth/register:
+    post:
+      tags:
+        - Auth
+      summary: Registers a new user
+      description: Creates a new user in the DB and logs the user in
+      requestBody:
+        description: The new user data
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                email:
+                  type: string
+                password:
+                  type: string
+                username:
+                  type: string
+                fullName:
+                  type: string
+              required:
+                - email
+                - password
+                - username
+                - fullName
+
+        required: true
+      responses:
+        "200":
+          description: User created and logged in
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Tokens"
+        "400":
+          description: Missing field
+        "409":
+          description: "Used email/username"
+  /auth/login:
+    post:
+      tags:
+        - Auth
+      summary: Logs an existing user in
+      description: Checks the give email/password and if there's a match logs the user in
+      requestBody:
+        description: Login credentials
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                email:
+                  type: string
+                password:
+                  type: string
+              required:
+                - email
+                - password
+        required: true
+      responses:
+        "200":
+          description: User is logged in
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Tokens"
+        "400":
+          description: Missing field
+        "401":
+          description: "Incorrect credentials"
+  /auth/google:
+    post:
+      tags:
+        - Auth
+      summary: Log in with google
+      description: Logs/Register a user with google and return the token pair
+      requestBody:
+        description: Login credentials
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                code:
+                  type: string
+              required:
+                - code
+        required: true
+      responses:
+        "200":
+          description: User is logged in
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Tokens"
+        "400":
+          description: Email is already associated to a user
+  /auth/logout:
+    get:
+      tags:
+        - Auth
+      summary: Logs a user out
+      description: Removes all refresh tokens from the user
+      parameters:
+        - $ref: "#/components/parameters/refreshToken"
+      responses:
+        "200":
+          description: User is logged out
+        "401":
+          description: Invalid refresh token
+  /auth/refresh:
+    get:
+      tags:
+        - Auth
+      summary: Refreshes the access token
+      description: Return a new token pair
+      parameters:
+        - $ref: "#/components/parameters/refreshToken"
+      responses:
+        "200":
+          description: New tokens
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Tokens"
+        "401":
+          description: Invalid refresh token
+  /users/{id}:
+    get:
+      tags:
+        - Users
+      summary: Get user data
+      description: Return a new token pair
+      security: 
+        - bearerAuth: []
+      parameters:
+        - $ref: "#/components/parameters/userId"
+      responses:
+        "200":
+          description: Requested user data
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/user"
+        "404":
+          description: User not found
+    put:
+      tags:
+        - Users
+      summary: Update user
+      description: Edit fields in user object
+      security: 
+        - bearerAuth: []
+      parameters:
+        - $ref: "#/components/parameters/userId"
+      requestBody:
+        description: New data
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                profilePic:
+                  type: string
+                username:
+                  type: string
+                fullName:
+                  type: string
+                password:
+                  type: string
+        required: true
+      responses:
+        "200":
+          description: Requested user data
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/user"
+        "400":
+          "description": "Must pass at least one field"
+        "403":
+          description: Cannot edit another user
+        "404":
+          description: User not found
+        "409":
+          description: User name is taken
+  /posts:
+    get:
+      tags:
+        - Posts
+      summary: Get all posts
+      description: Return all posts
+      security: 
+        - bearerAuth: []
+      responses:
+        "200":
+          description: All posts
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/post"
+    post:
+      tags:
+        - Posts
+      summary: Create a new post
+      description: Creates a new post in the DB
+      security: 
+        - bearerAuth: []
+      requestBody:
+        description: The new post data
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                content:
+                  type: string
+                image:
+                  type: string
+        required: true
+      responses:
+        "201":
+          description: Post created
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/post"
+        "400":
+          description: Missing field
+  /posts/{id}:
+    get:
+      tags:
+        - Posts
+      summary: Get post data
+      description: Return the post data
+      security: 
+        - bearerAuth: []
+      parameters:
+        - $ref: "#/components/parameters/postId"
+      responses:
+        "200":
+          description: Requested post data
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/post"
+        "404":
+          description: Post not found
+    put:
+      tags:
+        - Posts
+      summary: Update post
+      description: Edit fields in post object
+      security: 
+        - bearerAuth: []
+      parameters:
+        - $ref: "#/components/parameters/postId"
+      requestBody:
+        description: New data
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                content:
+                  type: string
+                image:
+                  type: string
+        required: true
+      responses:
+        "200":
+          description: Deleted post
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/post"
+        "400":
+          description: "Must pass at least one field"
+        "403":
+          description: Cannot edit post of another user
+        "404":
+          description: Post not found
+    delete:
+      tags:
+        - Posts
+      summary: Delete a post 
+      description: Delete a post by id 
+      security: 
+        - bearerAuth: []
+      parameters:
+        - $ref: "#/components/parameters/postId"
+      responses:
+        "200":
+          description: Post deleted
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/post"
+        "403":
+          description: Cannot delete post of another user
+        "404":
+          description: Post not found
+  /posts/own:
+    get:
+      tags:
+        - Posts
+      summary: Get own posts
+      description: Return own posts
+      security: 
+        - bearerAuth: []
+      responses:
+        "200":
+          description: Own posts
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/post"
+  /posts/{id}/comments:
+    post:
+      tags:
+        - Posts
+      summary: Add a new comment
+      description: Add a new comment to a post
+      security: 
+        - bearerAuth: []
+      parameters:
+        - $ref: "#/components/parameters/postId"
+      requestBody:
+        description: The new comment
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                content:
+                  type: string
+        required: true
+      responses:
+        "201":
+          description: Comment added
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/comment"
+        "400":
+          description: Missing field
+        "404":
+          description: Post not found
+components:
+  schemas:
+    user:
+      title: User
+      type: object
+      properties:
+        _id:
+          type: string
+        email:
+          type: string
+        username:
+          type: string
+        fullName:
+          type: string
+        profilePic:
+          type: string
+    post:
+      title: Post
+      type: object
+      properties:
+        _id:
+          type: string
+        content:
+          type: string
+        image:
+          type: string
+        author:
+          type: object
+          properties: 
+            _id:
+              type: string
+            email: 
+              type: string
+        commentsCount:
+          type: number
+    comment: 
+      title: Comment
+      type: object
+      properties:
+        author:
+          type: string
+        content:
+          type: string
+    Tokens:
+      title: Tokens
+      type: object
+      properties:
+        id:
+          type: string
+          description: The id of the logged in user
+        accessToken:
+          type: string
+          description: The user's access token
+        refreshToken:
+          type: string
+          description: Refresh token to get new access token
+  securitySchemes:
+    bearerAuth:
+      type: apiKey
+      in: header
+      name: Authorization
+      description: Refresh token of the user (Should start with Bearer)
+  parameters:
+    refreshToken:
+      name: Authorization
+      in: header
+      description: Refresh token of the user (Should start with Bearer)
+      required: true
+      schema:
+        type: string
+    userId:
+      name: id
+      in: path
+      description: Id of requested user
+      schema:
+        type: string
+      required: true
+    postId:
+      name: id
+      in: path
+      description: Id of requested post
+      schema:
+        type: string
+      required: true
