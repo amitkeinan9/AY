@@ -1,8 +1,23 @@
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 
-export const useSelectImage = () => {
+export const useSelectImage = (defaultImage?: string) => {
   const [selectedImage, setSelectedImage] = useState<File>();
   const [preview, setPreview] = useState<string>();
+
+  const resetImage = useCallback(async () => {
+    if (defaultImage) {
+      const res: Response = await fetch(defaultImage);
+      const blob: Blob = await res.blob();
+      const file: File = new File([blob], "default.png", blob);
+      setSelectedImage(file);
+    } else {
+      removeImage();
+    }
+  }, [defaultImage]);
+
+  useEffect(() => {
+    resetImage();
+  }, [resetImage]);
 
   useEffect(() => {
     if (!selectedImage) {
@@ -50,7 +65,7 @@ export const useSelectImage = () => {
   return {
     selectedImage: selectedImage ? readFileAsBase64(selectedImage) : undefined,
     preview,
-    setPreview,
+    resetImage,
     selectImage,
     removeImage,
   };

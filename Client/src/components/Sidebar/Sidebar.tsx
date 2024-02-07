@@ -6,6 +6,7 @@ import {
   useMediaQuery,
   IconButton,
 } from "@mui/material";
+import logo from "../.././assets/logo.svg";
 import LogoutIcon from "@mui/icons-material/Logout";
 import { Home as HomeIcon, Person as PersonIcon } from "@mui/icons-material";
 import {
@@ -71,7 +72,7 @@ export const Sidebar = () => {
     <div>
       <SidebarContainer>
         <ButtonsContainer>
-          <img src="src/assets/logo.svg" width="50" />
+          <img src={logo} width="50" />
           <NavigationLink
             text="Home"
             path="/home"
