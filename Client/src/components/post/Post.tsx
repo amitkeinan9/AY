@@ -11,6 +11,7 @@ import {
   usernameStyles,
 } from "./styles";
 import { Author, PostDTO } from "../../types/post";
+import { Box } from "@mui/material";
 
 interface PostProps {
   author: Author;
@@ -53,7 +54,7 @@ export const Post = (props: PostProps) => {
           <Username>@{author.username}</Username>
         </PostHeader>
 
-        <div>{content}</div>
+        <Box sx={{ width: "100%", wordBreak: 'break-word' }}>{content}</Box>
         {image && <Image src={image} />}
 
         {commentsCount !== undefined && (
