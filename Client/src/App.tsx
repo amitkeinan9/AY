@@ -62,6 +62,10 @@ const router = createHashRouter([
       },
     ],
   },
+  {
+    path: "*",
+    element: <Navigate to="/home" />,
+  },
 ]);
 
 const queryClient = new QueryClient();
