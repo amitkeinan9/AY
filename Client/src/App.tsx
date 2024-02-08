@@ -16,6 +16,7 @@ import { PostPage } from "./pages/post/PostPage";
 import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { EditProfilePage } from "./pages/editProfile/EditProfilePage";
+import { isAxiosError } from "axios";
 
 const router = createHashRouter([
   {
@@ -68,7 +69,29 @@ const router = createHashRouter([
   },
 ]);
 
-const queryClient = new QueryClient();
+const MAX_RETRIES = 2;
+
+const queryClient = new QueryClient({
+  defaultOptions: {
+    queries: {
+      retry: (failureCount, error) => {
+        if (
+          isAxiosError(error) &&
+          [404].includes(error.response?.status ?? 0)
+        ) {
+          console.log(`Aborting retry due to ${error.response?.status} status`);
+          return false;
+        }
+
+        if (failureCount > MAX_RETRIES) {
+          return false;
+        }
+
+        return true;
+      },
+    },
+  },
+});
 
 function App() {
   return (
