@@ -1,20 +1,30 @@
 import { Box, styled } from "@mui/system";
 import { Post } from "../../components/post/Post";
-import { ArrowBackIosNewOutlined as BackIcon, Edit as EditIcon, Delete as DeleteIcon } from "@mui/icons-material";
+import {
+  ArrowBackIosNewOutlined as BackIcon,
+  Edit as EditIcon,
+  Delete as DeleteIcon,
+} from "@mui/icons-material";
 import { useLocation, useNavigate, useParams } from "react-router-dom";
 import IconButton from "@mui/material/IconButton/IconButton";
-import { actionPostButtonStyles, actionPostContainerStyles, backButtonStyles, postHeaderStyles } from "./styles";
+import {
+  actionPostButtonStyles,
+  actionPostContainerStyles,
+  backButtonStyles,
+  postHeaderStyles,
+} from "./styles";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { backendAxiosInstance } from "../../axios/backendInstance";
 import { Comment, PostDTO, PostWithComments } from "../../types/post";
 import { NewComment } from "../../components/newComment/NewComment";
-import { Alert } from "@mui/material";
 import { useState } from "react";
 import { PostModal } from "../../components/PostModal/PostModal";
+import Alert from "@mui/material/Alert/Alert";
+import Typography from "@mui/material/Typography/Typography";
 
 const PostHeader = styled("div")(postHeaderStyles);
 const BackButton = styled(IconButton)(backButtonStyles);
-const ActionPostContainer = styled(Box)(actionPostContainerStyles)
+const ActionPostContainer = styled(Box)(actionPostContainerStyles);
 const ActionPostButton = styled(IconButton)(actionPostButtonStyles);
 
 export const PostPage = () => {
@@ -30,7 +40,7 @@ export const PostPage = () => {
     queryFn: async () =>
       (await backendAxiosInstance.get<PostWithComments>(`/posts/${postId}`))
         .data,
-    initialData: {
+    initialData: state && {
       _id: postId,
       author: state.author,
       content: state.content,
@@ -44,8 +54,8 @@ export const PostPage = () => {
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["posts"] });
       queryClient.invalidateQueries({ queryKey: ["posts", userId] });
-      goBack()
-    }
+      goBack();
+    },
   });
 
   const editPostMutation = useMutation({
@@ -71,38 +81,64 @@ export const PostPage = () => {
           </BackButton>
           <strong>Post</strong>
         </Box>
-        {post.author._id === userId &&
+        {post && post.author._id === userId && (
           <>
-            {deletePostMutation.isError && <Alert severity="error">Failed to delete post</Alert>}
+            {deletePostMutation.isError && (
+              <Alert severity="error">Failed to delete post</Alert>
+            )}
             <ActionPostContainer>
-              <ActionPostButton color="primary" onClick={() => setIsEditPostOpen(true)}><EditIcon /></ActionPostButton>
-              <ActionPostButton color="primary" onClick={() => deletePostMutation.mutate()}><DeleteIcon /></ActionPostButton>
+              <ActionPostButton
+                color="primary"
+                onClick={() => setIsEditPostOpen(true)}
+              >
+                <EditIcon />
+              </ActionPostButton>
+              <ActionPostButton
+                color="primary"
+                onClick={() => deletePostMutation.mutate()}
+              >
+                <DeleteIcon />
+              </ActionPostButton>
             </ActionPostContainer>
           </>
-        }
+        )}
       </PostHeader>
-      <Post
-        content={post.content}
-        image={post.image}
-        author={post.author}
-        commentsCount={post.comments.length || state.commentsCount}
-      />
-      <NewComment />
-      {post.comments.map((comment: Comment) => (
-        <Post
-          key={`${comment.content}-${comment.author._id}`}
-          content={comment.content}
-          author={comment.author}
-        />
-      ))}
-      <PostModal
-        isOpen={isEditPostOpen}
-        isNewPost={false}
-        currContent={post.content}
-        currImage={post.image}
-        actionPostMutation={editPostMutation}
-        onClose={() => setIsEditPostOpen(false)}
-      />
+      {post ? (
+        <>
+          <Post
+            content={post.content}
+            image={post.image}
+            author={post.author}
+            commentsCount={post.comments.length || state.commentsCount}
+          />
+          <NewComment />
+          {post.comments.map((comment: Comment) => (
+            <Post
+              key={`${comment.content}-${comment.author._id}`}
+              content={comment.content}
+              author={comment.author}
+            />
+          ))}
+          <PostModal
+            isOpen={isEditPostOpen}
+            isNewPost={false}
+            currContent={post.content}
+            currImage={post.image}
+            actionPostMutation={editPostMutation}
+            onClose={() => setIsEditPostOpen(false)}
+          />
+        </>
+      ) : (
+        <Typography
+          sx={{
+            textAlign: "center",
+            marginTop: 5,
+            color: "gray",
+          }}
+        >
+          Post does not exist
+        </Typography>
+      )}
     </div>
   );
 };
