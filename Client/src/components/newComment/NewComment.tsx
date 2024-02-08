@@ -24,6 +24,9 @@ export const NewComment = () => {
       <div>
         <CommentContainer>
           <Avatar
+            imgProps={{
+              referrerPolicy: "no-referrer",
+            }}
             alt={connectedUser.fullName}
             src={connectedUser.profilePic}
           ></Avatar>

@@ -1,5 +1,5 @@
 paths:
-  /auth/register:
+  /api/auth/register:
     post:
       tags:
         - Auth
@@ -38,7 +38,7 @@ paths:
           description: Missing field
         "409":
           description: "Used email/username"
-  /auth/login:
+  /api/auth/login:
     post:
       tags:
         - Auth
@@ -70,7 +70,7 @@ paths:
           description: Missing field
         "401":
           description: "Incorrect credentials"
-  /auth/google:
+  /api/auth/google:
     post:
       tags:
         - Auth
@@ -97,7 +97,7 @@ paths:
                 $ref: "#/components/schemas/Tokens"
         "400":
           description: Email is already associated to a user
-  /auth/logout:
+  /api/auth/logout:
     get:
       tags:
         - Auth
@@ -110,7 +110,7 @@ paths:
           description: User is logged out
         "401":
           description: Invalid refresh token
-  /auth/refresh:
+  /api/auth/refresh:
     get:
       tags:
         - Auth
@@ -127,13 +127,13 @@ paths:
                 $ref: "#/components/schemas/Tokens"
         "401":
           description: Invalid refresh token
-  /users/{id}:
+  /api/users/{id}:
     get:
       tags:
         - Users
       summary: Get user data
       description: Return a new token pair
-      security: 
+      security:
         - bearerAuth: []
       parameters:
         - $ref: "#/components/parameters/userId"
@@ -151,7 +151,7 @@ paths:
         - Users
       summary: Update user
       description: Edit fields in user object
-      security: 
+      security:
         - bearerAuth: []
       parameters:
         - $ref: "#/components/parameters/userId"
@@ -186,13 +186,13 @@ paths:
           description: User not found
         "409":
           description: User name is taken
-  /posts:
+  /api/posts:
     get:
       tags:
         - Posts
       summary: Get all posts
       description: Return all posts
-      security: 
+      security:
         - bearerAuth: []
       responses:
         "200":
@@ -206,7 +206,7 @@ paths:
         - Posts
       summary: Create a new post
       description: Creates a new post in the DB
-      security: 
+      security:
         - bearerAuth: []
       requestBody:
         description: The new post data
@@ -229,13 +229,13 @@ paths:
                 $ref: "#/components/schemas/post"
         "400":
           description: Missing field
-  /posts/{id}:
+  /api/posts/{id}:
     get:
       tags:
         - Posts
       summary: Get post data
       description: Return the post data
-      security: 
+      security:
         - bearerAuth: []
       parameters:
         - $ref: "#/components/parameters/postId"
@@ -253,7 +253,7 @@ paths:
         - Posts
       summary: Update post
       description: Edit fields in post object
-      security: 
+      security:
         - bearerAuth: []
       parameters:
         - $ref: "#/components/parameters/postId"
@@ -285,9 +285,9 @@ paths:
     delete:
       tags:
         - Posts
-      summary: Delete a post 
-      description: Delete a post by id 
-      security: 
+      summary: Delete a post
+      description: Delete a post by id
+      security:
         - bearerAuth: []
       parameters:
         - $ref: "#/components/parameters/postId"
@@ -302,13 +302,13 @@ paths:
           description: Cannot delete post of another user
         "404":
           description: Post not found
-  /posts/own:
+  /api/posts/own:
     get:
       tags:
         - Posts
       summary: Get own posts
       description: Return own posts
-      security: 
+      security:
         - bearerAuth: []
       responses:
         "200":
@@ -317,13 +317,13 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/post"
-  /posts/{id}/comments:
+  /api/posts/{id}/comments:
     post:
       tags:
         - Posts
       summary: Add a new comment
       description: Add a new comment to a post
-      security: 
+      security:
         - bearerAuth: []
       parameters:
         - $ref: "#/components/parameters/postId"
@@ -376,14 +376,14 @@ components:
           type: string
         author:
           type: object
-          properties: 
+          properties:
             _id:
               type: string
-            email: 
+            email:
               type: string
         commentsCount:
           type: number
-    comment: 
+    comment:
       title: Comment
       type: object
       properties:
