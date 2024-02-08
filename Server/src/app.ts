@@ -64,17 +64,30 @@ const initApp = (config: AppConfig = {}): Promise<Express> =>
 
       app.use(morgan("tiny"));
 
+      app.use(
+        "/assets",
+        express.static(
+          path.resolve(__dirname, "..", "..", "Client/dist/assets")
+        )
+      );
+
+      app.get("/", (req, res) =>
+        res.sendFile(
+          path.resolve(__dirname, "..", "..", "Client/dist", "index.html")
+        )
+      );
+
       app.use("/public", express.static("public"));
 
-      app.use("/auth", getAuthRouter(config?.oAuthClientMock));
+      app.use("/api/auth", getAuthRouter(config?.oAuthClientMock));
 
       app.use("/swagger", swaggerUI.serve, swaggerUI.setup(specs));
 
       app.use(validateAuth);
 
-      app.use("/posts", postsRouter);
+      app.use("/api/posts", postsRouter);
 
-      app.use("/users", userRouter);
+      app.use("/api/users", userRouter);
 
       app.use(errorHandler);
 

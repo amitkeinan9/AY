@@ -7,6 +7,7 @@ import {
 } from "axios";
 import { REFRESH_ENDPOINT, refreshToken } from "./tokenRefresher";
 import { backendAxiosInstance } from "./backendInstance";
+import { redirect } from "react-router-dom";
 
 export const getErrorInterceptor = () => {
   let tokenRefresher: Promise<void> | undefined = undefined;
@@ -41,7 +42,7 @@ export const getErrorInterceptor = () => {
           localStorage.removeItem("refreshToken");
           localStorage.removeItem("accessToken");
 
-          window.location.href = "/login";
+          redirect("/login");
         }
       }
     }
